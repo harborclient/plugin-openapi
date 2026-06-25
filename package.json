@@ -1,6 +1,6 @@
 {
   "name": "@harborclient/plugin-openapi",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "scripts": {
     "build": "esbuild src/renderer.tsx --bundle --outfile=dist/renderer.js --format=esm --jsx=automatic --jsx-import-source=@harborclient/plugin-api --external:react --external:react-dom",
@@ -15,7 +15,7 @@
     "yaml": "^2.8.0"
   },
   "devDependencies": {
-    "@harborclient/plugin-api": "^0.4.2",
+    "@harborclient/sdk": "^0.4.3",
     "@types/node": "^26.0.1",
     "@types/react": "^19.1.8",
     "esbuild": "^0.25.0",
