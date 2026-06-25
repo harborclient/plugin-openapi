@@ -1,0 +1,23 @@
+{
+  "id": "com.harborclient.plugins.openapi",
+  "name": "OpenAPI Import",
+  "version": "1.0.0",
+  "company": "HarborClient",
+  "description": "README.md",
+  "engines": {
+    "harborclient": ">=1.8.0"
+  },
+  "renderer": "dist/renderer.js",
+  "permissions": ["ui", "filesystem:pick", "filesystem:read", "storage"],
+  "contributes": {
+    "commands": [{ "id": "openapi.import", "title": "Import OpenAPI" }],
+    "menus": [
+      {
+        "menu": "file",
+        "command": "openapi.import",
+        "group": "import"
+      }
+    ],
+    "mainViews": [{ "id": "openapi.import", "title": "Import OpenAPI" }]
+  }
+}
