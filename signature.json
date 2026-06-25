@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "com.harborclient.plugins.openapi",
+  "pluginVersion": "1.0.1",
+  "algorithm": "Ed25519",
+  "files": [
+    {
+      "path": ".gitignore",
+      "sha256": "88ad380decbd9a1a6659c573833c96932dab32e7e0e88fa3353c98f758cd10b3"
+    },
+    {
+      "path": "dist/renderer.js",
+      "sha256": "abcd5b10fc0224cda355394e83ee50fb09f432b50cd00574b641007f976a3934"
+    },
+    {
+      "path": "manifest.json",
+      "sha256": "e994c29d5374438c8c0f2b694173c8d68aeaa6dbff55ca3cf98f4b9e08f1d80a"
+    },
+    {
+      "path": "package.json",
+      "sha256": "5616cadf540379639154946b338dc19ac2b178a977f8fa416b423f6c94301319"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "sha256": "a261b35aff6da48508429fb9c8ca12458423368a8d092c891a942932055dbaab"
+    },
+    {
+      "path": "README.md",
+      "sha256": "60a45bbbcb3d09cb0c7ff84a904dbec7bb5163b111fa1a706207f3b8893b4d1a"
+    },
+    {
+      "path": "screenshot.png",
+      "sha256": "d56ed853fd32e10eb94b8f9165f53255f4e44c3b0e9d5029d9df36eb33cbfab3"
+    },
+    {
+      "path": "scripts/plugin-sign.ts",
+      "sha256": "6646535c3a65cbcdc0f22e9176025e0f1eed4f48143ef4950e085dae06cad2c1"
+    },
+    {
+      "path": "scripts/plugin-verify.ts",
+      "sha256": "7f1f2407a2a8fac287d88e18f48db22d926c7de656c06143dd7baf3f30898620"
+    },
+    {
+      "path": "src/components/ImportView.tsx",
+      "sha256": "2a549d7f977d4516c0ed04f39b0a7c1c89bedc9bfbb635e58d5b4d4357ad0d7c"
+    },
+    {
+      "path": "src/openapi/parse.test.ts",
+      "sha256": "8b01f9856ce7b17495d347ff3451c6b602be2f98698ecf2685d4f6e84ebff543"
+    },
+    {
+      "path": "src/openapi/parse.ts",
+      "sha256": "259d55e16df39f50a79e57ab939170a2d8b3a9040e5000d75b2d7faba2439d2c"
+    },
+    {
+      "path": "src/renderer.tsx",
+      "sha256": "1d388e8a68e73cfdc1e0a3ab94e5c9e05905188c4d0a8662f12a9746e81b560a"
+    },
+    {
+      "path": "tsconfig.json",
+      "sha256": "d96f30992a17200155752831b8b7118f775e408a26896d06e2d0d648de4ba5c8"
+    }
+  ],
+  "signature": "LR1YX4tmIQw4NeyhdLOU5rLrUueMkRWL9jdahpKFDbJILlw0SWqYV0krTKcEbvWJnqKaDiotLsu4DPslNti3CA=="
+}
