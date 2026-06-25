@@ -2,7 +2,7 @@ import { parse as parseYaml } from "yaml";
 import type {
   BodyType,
   CreateCollectionRequest,
-} from "@harborclient/plugin-api";
+} from "@harborclient/sdk";
 
 const HTTP_METHODS = [
   "get",

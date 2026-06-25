@@ -24,13 +24,13 @@ pnpm build
 
 Load the project folder in HarborClient via **Settings → Plugins → Load unpacked…**.
 
-Requires `@harborclient/plugin-api@^0.4.0`.
+Requires `@harborclient/sdk@^0.4.3`.
 
-## Local plugin-api development
+## Local SDK development
 
-Do not commit `file:` paths in `package.json`. To test against a local `@harborclient/plugin-api` checkout without changing tracked files, use one of:
+Do not commit `file:` paths in `package.json`. To test against a local `@harborclient/sdk` checkout without changing tracked files, use one of:
 
-- `pnpm link` from the published package directory after `pnpm pack` in `harborclient-plugin-api`
+- `pnpm link` from the published package directory after `pnpm pack` in `harborclient/sdk`
 - A gitignored override file that only exists on your machine
 
 ## Development

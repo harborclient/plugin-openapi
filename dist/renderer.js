@@ -1,4 +1,4 @@
-// node_modules/.pnpm/@harborclient+plugin-api@file+..+harborclient-plugin-api_react@19.2.7/node_modules/@harborclient/plugin-api/dist/runtime/reactHost.js
+// node_modules/.pnpm/@harborclient+sdk@0.4.3_react@19.2.7/node_modules/@harborclient/sdk/dist/runtime/reactHost.js
 var hostReact = null;
 function setHostReact(react) {
   hostReact = react;
@@ -12,12 +12,12 @@ function requireHostReact() {
   return hostReact;
 }
 
-// node_modules/.pnpm/@harborclient+plugin-api@file+..+harborclient-plugin-api_react@19.2.7/node_modules/@harborclient/plugin-api/dist/runtime/index.js
+// node_modules/.pnpm/@harborclient+sdk@0.4.3_react@19.2.7/node_modules/@harborclient/sdk/dist/runtime/index.js
 function installReact(react) {
   setHostReact(react);
 }
 
-// node_modules/.pnpm/@harborclient+plugin-api@file+..+harborclient-plugin-api_react@19.2.7/node_modules/@harborclient/plugin-api/dist/runtime/react.js
+// node_modules/.pnpm/@harborclient+sdk@0.4.3_react@19.2.7/node_modules/@harborclient/sdk/dist/runtime/react.js
 function hook(name) {
   const react = requireHostReact();
   const fn = react[name];
@@ -6307,7 +6307,15 @@ function parse(src, reviver, options) {
 }
 
 // src/openapi/parse.ts
-var HTTP_METHODS = ["get", "post", "put", "patch", "delete", "head", "options"];
+var HTTP_METHODS = [
+  "get",
+  "post",
+  "put",
+  "patch",
+  "delete",
+  "head",
+  "options"
+];
 function parseOpenApiSpec(text) {
   const document = parseDocument2(text);
   assertOpenApiVersion(document);
@@ -6570,7 +6578,9 @@ function sampleFromSchema(schema4) {
     const result = {};
     for (const [key, propertySchema] of Object.entries(schema4.properties)) {
       if (propertySchema && typeof propertySchema === "object") {
-        result[key] = sampleFromSchema(propertySchema);
+        result[key] = sampleFromSchema(
+          propertySchema
+        );
       } else {
         result[key] = "";
       }
@@ -6624,8 +6634,8 @@ function operationsToCreateRequests(operations) {
   }));
 }
 
-// node_modules/.pnpm/@harborclient+plugin-api@file+..+harborclient-plugin-api_react@19.2.7/node_modules/@harborclient/plugin-api/dist/runtime/jsx-runtime.js
-var Fragment = Symbol.for("@harborclient/plugin-api.Fragment");
+// node_modules/.pnpm/@harborclient+sdk@0.4.3_react@19.2.7/node_modules/@harborclient/sdk/dist/runtime/jsx-runtime.js
+var Fragment = Symbol.for("@harborclient/sdk.Fragment");
 function build(type, props, key) {
   const react = requireHostReact();
   const elementType = type === Fragment ? react.Fragment : type;
@@ -6701,7 +6711,9 @@ function ImportView({ hc }) {
         setSpecPath(path);
         setParsedSpec(parsed);
         setCollectionName(parsed.title);
-        setSelectedIds(new Set(parsed.operations.map((operation) => operation.id)));
+        setSelectedIds(
+          new Set(parsed.operations.map((operation) => operation.id))
+        );
         await hc.storage.set(STORAGE_KEY_LAST_PATH, path);
       } catch (loadError) {
         setParsedSpec(null);
@@ -6889,7 +6901,10 @@ function ImportView({ hc }) {
         ] }),
         /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-4", children: [...groupedOperations.entries()].map(([folder, operations]) => {
           const folderLabel = folder || "Untagged";
-          const folderCheckboxId = `openapi-folder-${folderLabel.replace(/\s+/g, "-")}`;
+          const folderCheckboxId = `openapi-folder-${folderLabel.replace(
+            /\s+/g,
+            "-"
+          )}`;
           const selectedInFolder = operations.filter(
             (operation) => selectedIds.has(operation.id)
           ).length;

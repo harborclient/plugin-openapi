@@ -3,8 +3,8 @@ import {
   useEffect,
   useMemo,
   useState,
-} from "@harborclient/plugin-api/react";
-import type { PluginContext } from "@harborclient/plugin-api";
+} from "@harborclient/sdk/react";
+import type { PluginContext } from "@harborclient/sdk";
 import {
   operationsToCreateRequests,
   parseOpenApiSpec,
