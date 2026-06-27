@@ -1,562 +1,588 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-<head>
-  <meta charset="UTF-8" />
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+      html,
+      body {
+        width: 1280px;
+        height: 720px;
+        min-height: 720px;
+        max-height: 720px;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        background-color: #0c1220;
+        background-image:
+          radial-gradient(ellipse 70% 60% at 88% 10%, rgba(56, 189, 248, 0.2) 0%, transparent 55%),
+          radial-gradient(ellipse 60% 50% at 8% 85%, rgba(251, 146, 60, 0.16) 0%, transparent 50%),
+          radial-gradient(ellipse 40% 30% at 50% 50%, rgba(73, 204, 144, 0.06) 0%, transparent 60%),
+          linear-gradient(160deg, #0c1220 0%, #111827 45%, #0a0f1a 100%);
+        background-repeat: no-repeat;
+        background-size: 1280px 720px;
+      }
 
-    html,
-    body {
-      width: 1280px;
-      height: 720px;
-      min-height: 720px;
-      max-height: 720px;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #0c1220;
-      background-image:
-        radial-gradient(ellipse 70% 60% at 88% 10%, rgba(56, 189, 248, 0.2) 0%, transparent 55%),
-        radial-gradient(ellipse 60% 50% at 8% 85%, rgba(251, 146, 60, 0.16) 0%, transparent 50%),
-        radial-gradient(ellipse 40% 30% at 50% 50%, rgba(73, 204, 144, 0.06) 0%, transparent 60%),
-        linear-gradient(160deg, #0c1220 0%, #111827 45%, #0a0f1a 100%);
-      background-repeat: no-repeat;
-      background-size: 1280px 720px;
-    }
+      .canvas {
+        position: fixed;
+        inset: 0;
+        width: 1280px;
+        height: 720px;
+        background: transparent;
+      }
 
-    .canvas {
-      position: fixed;
-      inset: 0;
-      width: 1280px;
-      height: 720px;
-      background: transparent;
-    }
+      .grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: 32px 32px;
+        pointer-events: none;
+      }
 
-    .grid {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-      background-size: 32px 32px;
-      pointer-events: none;
-    }
+      .header {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 2;
+        padding: 32px 48px 20px;
+      }
 
-    .header {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 2;
-      padding: 32px 48px 20px;
-    }
+      .mockup-area {
+        position: absolute;
+        top: 172px;
+        left: 0;
+        width: 1280px;
+        height: 548px;
+      }
 
-    .mockup-area {
-      position: absolute;
-      top: 172px;
-      left: 0;
-      width: 1280px;
-      height: 548px;
-    }
+      .badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+      }
 
-    .badge-row {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
+      .plugin-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 5px 12px;
+        border-radius: 999px;
+        background: rgba(56, 189, 248, 0.12);
+        border: 1px solid rgba(56, 189, 248, 0.35);
+        color: #7dd3fc;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
 
-    .plugin-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 5px 12px;
-      border-radius: 999px;
-      background: rgba(56, 189, 248, 0.12);
-      border: 1px solid rgba(56, 189, 248, 0.35);
-      color: #7dd3fc;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
+      .plugin-badge .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #38bdf8;
+        box-shadow: 0 0 8px #38bdf8;
+      }
 
-    .plugin-badge .dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #38bdf8;
-      box-shadow: 0 0 8px #38bdf8;
-    }
+      .pill {
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: #94a3b8;
+        font-size: 11px;
+        font-weight: 500;
+      }
 
-    .pill {
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      color: #94a3b8;
-      font-size: 11px;
-      font-weight: 500;
-    }
+      h1 {
+        font-size: 38px;
+        font-weight: 700;
+        line-height: 1.1;
+        color: #f8fafc;
+        letter-spacing: -0.02em;
+      }
 
-    h1 {
-      font-size: 38px;
-      font-weight: 700;
-      line-height: 1.1;
-      color: #f8fafc;
-      letter-spacing: -0.02em;
-    }
+      h1 span {
+        background: linear-gradient(90deg, #38bdf8, #49cc90, #fb923c);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
 
-    h1 span {
-      background: linear-gradient(90deg, #38bdf8, #49cc90, #fb923c);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
+      .subtitle {
+        margin-top: 10px;
+        font-size: 16px;
+        color: #64748b;
+        line-height: 1.45;
+        max-width: 640px;
+      }
 
-    .subtitle {
-      margin-top: 10px;
-      font-size: 16px;
-      color: #64748b;
-      line-height: 1.45;
-      max-width: 640px;
-    }
+      .mockup-glow {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 4px;
+        bottom: 0;
+        border-radius: 16px 16px 0 0;
+        background: linear-gradient(
+          135deg,
+          rgba(56, 189, 248, 0.2),
+          rgba(73, 204, 144, 0.12),
+          rgba(251, 146, 60, 0.1)
+        );
+        filter: blur(24px);
+        opacity: 0.85;
+      }
 
-    .mockup-glow {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 4px;
-      bottom: 0;
-      border-radius: 16px 16px 0 0;
-      background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(73, 204, 144, 0.12), rgba(251, 146, 60, 0.1));
-      filter: blur(24px);
-      opacity: 0.85;
-    }
+      .mockup {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1280px;
+        height: 548px;
+        border-radius: 12px 12px 0 0;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: none;
+        background: #1a1f2e;
+        box-shadow:
+          0 -8px 32px rgba(0, 0, 0, 0.35),
+          0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
 
-    .mockup {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 1280px;
-      height: 548px;
-      border-radius: 12px 12px 0 0;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-bottom: none;
-      background: #1a1f2e;
-      box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
+      .mockup-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        background: #141824;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        flex-shrink: 0;
+      }
 
-    .mockup-toolbar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 16px;
-      background: #141824;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      flex-shrink: 0;
-    }
+      .traffic {
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+      }
 
-    .traffic {
-      width: 11px;
-      height: 11px;
-      border-radius: 50%;
-    }
+      .traffic.r {
+        background: #ff5f57;
+      }
 
-    .traffic.r {
-      background: #ff5f57;
-    }
+      .traffic.y {
+        background: #febc2e;
+      }
 
-    .traffic.y {
-      background: #febc2e;
-    }
+      .traffic.g {
+        background: #28c840;
+      }
 
-    .traffic.g {
-      background: #28c840;
-    }
+      .toolbar-title {
+        margin-left: 10px;
+        font-size: 12px;
+        color: #64748b;
+        font-weight: 500;
+      }
 
-    .toolbar-title {
-      margin-left: 10px;
-      font-size: 12px;
-      color: #64748b;
-      font-weight: 500;
-    }
+      .panel-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 14px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        background: #161b28;
+        flex-shrink: 0;
+      }
 
-    .panel-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 14px 20px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      background: #161b28;
-      flex-shrink: 0;
-    }
+      .panel-header h2 {
+        font-size: 15px;
+        font-weight: 600;
+        color: #e2e8f0;
+        margin-bottom: 4px;
+      }
 
-    .panel-header h2 {
-      font-size: 15px;
-      font-weight: 600;
-      color: #e2e8f0;
-      margin-bottom: 4px;
-    }
+      .panel-header p {
+        font-size: 12px;
+        color: #64748b;
+        max-width: 480px;
+        line-height: 1.4;
+      }
 
-    .panel-header p {
-      font-size: 12px;
-      color: #64748b;
-      max-width: 480px;
-      line-height: 1.4;
-    }
+      .choose-btn {
+        padding: 8px 14px;
+        border-radius: 7px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #e2e8f0;
+        font-size: 12px;
+        font-weight: 500;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
 
-    .choose-btn {
-      padding: 8px 14px;
-      border-radius: 7px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #e2e8f0;
-      font-size: 12px;
-      font-weight: 500;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
+      .panel-body {
+        flex: 1;
+        min-height: 0;
+        padding: 16px 20px 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        overflow: hidden;
+      }
 
-    .panel-body {
-      flex: 1;
-      min-height: 0;
-      padding: 16px 20px 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      overflow: hidden;
-    }
+      .field-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #e2e8f0;
+        margin-bottom: 6px;
+      }
 
-    .field-label {
-      font-size: 12px;
-      font-weight: 600;
-      color: #e2e8f0;
-      margin-bottom: 6px;
-    }
+      .field-input {
+        padding: 10px 12px;
+        border-radius: 7px;
+        background: #0f131c;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        font-size: 13px;
+        color: #cbd5e1;
+      }
 
-    .field-input {
-      padding: 10px 12px;
-      border-radius: 7px;
-      background: #0f131c;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      font-size: 13px;
-      color: #cbd5e1;
-    }
+      .meta-lines {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        font-size: 11px;
+        color: #64748b;
+      }
 
-    .meta-lines {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      font-size: 11px;
-      color: #64748b;
-    }
+      .meta-lines code {
+        font-family: ui-monospace, monospace;
+        color: #94a3b8;
+      }
 
-    .meta-lines code {
-      font-family: ui-monospace, monospace;
-      color: #94a3b8;
-    }
+      .action-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-shrink: 0;
+      }
 
-    .action-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-shrink: 0;
-    }
+      .selection-count {
+        font-size: 12px;
+        color: #cbd5e1;
+      }
 
-    .selection-count {
-      font-size: 12px;
-      color: #cbd5e1;
-    }
+      .import-btn {
+        padding: 9px 18px;
+        border-radius: 7px;
+        background: linear-gradient(135deg, #0ea5e9, #49cc90);
+        color: white;
+        font-size: 12px;
+        font-weight: 600;
+        box-shadow: 0 4px 14px rgba(14, 165, 233, 0.3);
+        white-space: nowrap;
+      }
 
-    .import-btn {
-      padding: 9px 18px;
-      border-radius: 7px;
-      background: linear-gradient(135deg, #0ea5e9, #49cc90);
-      color: white;
-      font-size: 12px;
-      font-weight: 600;
-      box-shadow: 0 4px 14px rgba(14, 165, 233, 0.3);
-      white-space: nowrap;
-    }
+      .groups {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        overflow: hidden;
+      }
 
-    .groups {
-      flex: 1;
-      min-height: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      overflow: hidden;
-    }
+      .group {
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        flex-shrink: 0;
+      }
 
-    .group {
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(0, 0, 0, 0.15);
-      overflow: hidden;
-      flex-shrink: 0;
-    }
+      .group-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        background: rgba(255, 255, 255, 0.02);
+      }
 
-    .group-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      background: rgba(255, 255, 255, 0.02);
-    }
+      .checkbox {
+        width: 14px;
+        height: 14px;
+        border-radius: 3px;
+        background: #38bdf8;
+        border: 1px solid #38bdf8;
+        position: relative;
+        flex-shrink: 0;
+      }
 
-    .checkbox {
-      width: 14px;
-      height: 14px;
-      border-radius: 3px;
-      background: #38bdf8;
-      border: 1px solid #38bdf8;
-      position: relative;
-      flex-shrink: 0;
-    }
+      .checkbox::after {
+        content: '✓';
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        color: white;
+        font-weight: 700;
+      }
 
-    .checkbox::after {
-      content: "✓";
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
-      color: white;
-      font-weight: 700;
-    }
+      .group-title {
+        font-size: 12px;
+        font-weight: 600;
+        color: #e2e8f0;
+      }
 
-    .group-title {
-      font-size: 12px;
-      font-weight: 600;
-      color: #e2e8f0;
-    }
+      .group-count {
+        font-size: 11px;
+        color: #64748b;
+      }
 
-    .group-count {
-      font-size: 11px;
-      color: #64748b;
-    }
+      .op-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 8px 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      }
 
-    .op-row {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 8px 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-    }
+      .op-row:last-child {
+        border-bottom: none;
+      }
 
-    .op-row:last-child {
-      border-bottom: none;
-    }
+      .op-content {
+        flex: 1;
+        min-width: 0;
+      }
 
-    .op-content {
-      flex: 1;
-      min-width: 0;
-    }
+      .op-name {
+        font-size: 12px;
+        font-weight: 500;
+        color: #e2e8f0;
+        margin-bottom: 3px;
+      }
 
-    .op-name {
-      font-size: 12px;
-      font-weight: 500;
-      color: #e2e8f0;
-      margin-bottom: 3px;
-    }
+      .op-url {
+        font-size: 11px;
+        font-family: ui-monospace, monospace;
+        color: #94a3b8;
+      }
 
-    .op-url {
-      font-size: 11px;
-      font-family: ui-monospace, monospace;
-      color: #94a3b8;
-    }
+      .method {
+        font-weight: 700;
+        font-family: ui-monospace, monospace;
+      }
 
-    .method {
-      font-weight: 700;
-      font-family: ui-monospace, monospace;
-    }
+      .method.get {
+        color: #34d399;
+      }
 
-    .method.get {
-      color: #34d399;
-    }
+      .method.post {
+        color: #38bdf8;
+      }
 
-    .method.post {
-      color: #38bdf8;
-    }
+      .toast {
+        position: absolute;
+        top: 36px;
+        right: 56px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        border-radius: 9px;
+        background: rgba(15, 23, 42, 0.95);
+        border: 1px solid rgba(73, 204, 144, 0.4);
+        box-shadow:
+          0 8px 24px rgba(0, 0, 0, 0.45),
+          0 0 20px rgba(73, 204, 144, 0.12);
+        z-index: 4;
+      }
 
-    .toast {
-      position: absolute;
-      top: 36px;
-      right: 56px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 14px;
-      border-radius: 9px;
-      background: rgba(15, 23, 42, 0.95);
-      border: 1px solid rgba(73, 204, 144, 0.4);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 20px rgba(73, 204, 144, 0.12);
-      z-index: 4;
-    }
+      .toast-icon {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: rgba(73, 204, 144, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #49cc90;
+        font-size: 11px;
+        font-weight: 700;
+      }
 
-    .toast-icon {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: rgba(73, 204, 144, 0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #49cc90;
-      font-size: 11px;
-      font-weight: 700;
-    }
+      .toast-text {
+        font-size: 12px;
+        color: #e2e8f0;
+        font-weight: 500;
+      }
+    </style>
+  </head>
 
-    .toast-text {
-      font-size: 12px;
-      color: #e2e8f0;
-      font-weight: 500;
-    }
-  </style>
-</head>
+  <body>
+    <div class="canvas">
+      <div class="grid"></div>
 
-<body>
-  <div class="canvas">
-    <div class="grid"></div>
-
-    <div class="header">
-      <div class="badge-row">
-        <div class="plugin-badge"><span class="dot"></span> HarborClient Plugin</div>
-        <span class="pill">Local parsing</span>
-        <span class="pill">Tag grouping</span>
-        <span class="pill">Preview first</span>
+      <div class="header">
+        <div class="badge-row">
+          <div class="plugin-badge"><span class="dot"></span> HarborClient Plugin</div>
+          <span class="pill">Local parsing</span>
+          <span class="pill">Tag grouping</span>
+          <span class="pill">Preview first</span>
+        </div>
+        <h1><span>OpenAPI</span> spec → collection, instantly</h1>
+        <p class="subtitle">
+          Parse OpenAPI 3.x locally, preview operations grouped by tags, and bulk-create a
+          HarborClient collection — nothing leaves your machine.
+        </p>
       </div>
-      <h1><span>OpenAPI</span> spec → collection, instantly</h1>
-      <p class="subtitle">Parse OpenAPI 3.x locally, preview operations grouped by tags, and bulk-create a HarborClient
-        collection — nothing leaves your machine.</p>
-    </div>
 
-    <div class="mockup-area">
-      <div class="mockup-glow"></div>
-      <div class="mockup">
-        <div class="mockup-toolbar">
-          <span class="traffic r"></span>
-          <span class="traffic y"></span>
-          <span class="traffic g"></span>
-          <span class="toolbar-title">HarborClient — Import OpenAPI</span>
-        </div>
-        <div class="panel-header">
-          <div>
-            <h2>Import OpenAPI</h2>
-            <p>Parse an OpenAPI 3.x spec locally and create a HarborClient collection grouped by tags.</p>
+      <div class="mockup-area">
+        <div class="mockup-glow"></div>
+        <div class="mockup">
+          <div class="mockup-toolbar">
+            <span class="traffic r"></span>
+            <span class="traffic y"></span>
+            <span class="traffic g"></span>
+            <span class="toolbar-title">HarborClient — Import OpenAPI</span>
           </div>
-          <div class="choose-btn">Choose file…</div>
-        </div>
-        <div class="panel-body">
-          <div>
-            <div class="field-label">Collection name</div>
-            <div class="field-input">E-commerce API</div>
-            <div class="meta-lines" style="margin-top: 8px;">
-              <div>Source: <code>/project/spec.yaml</code></div>
-              <div>Base URL: <code>https://api.example.com/v1</code></div>
+          <div class="panel-header">
+            <div>
+              <h2>Import OpenAPI</h2>
+              <p>
+                Parse an OpenAPI 3.x spec locally and create a HarborClient collection grouped by
+                tags.
+              </p>
             </div>
+            <div class="choose-btn">Choose file…</div>
           </div>
-          <div class="action-bar">
-            <span class="selection-count">11 of 11 operations selected</span>
-            <div class="import-btn">Import collection</div>
-          </div>
-          <div class="groups">
-            <div class="group">
-              <div class="group-header">
-                <span class="checkbox"></span>
-                <span class="group-title">Auth</span>
-                <span class="group-count">(2)</span>
+          <div class="panel-body">
+            <div>
+              <div class="field-label">Collection name</div>
+              <div class="field-input">E-commerce API</div>
+              <div class="meta-lines" style="margin-top: 8px">
+                <div>Source: <code>/project/spec.yaml</code></div>
+                <div>Base URL: <code>https://api.example.com/v1</code></div>
               </div>
-              <div class="op-row">
-                <span class="checkbox"></span>
-                <div class="op-content">
-                  <div class="op-name">Login and get access token</div>
-                  <div class="op-url"><span class="method post">POST</span> https://api.example.com/v1/auth/login</div>
+            </div>
+            <div class="action-bar">
+              <span class="selection-count">11 of 11 operations selected</span>
+              <div class="import-btn">Import collection</div>
+            </div>
+            <div class="groups">
+              <div class="group">
+                <div class="group-header">
+                  <span class="checkbox"></span>
+                  <span class="group-title">Auth</span>
+                  <span class="group-count">(2)</span>
+                </div>
+                <div class="op-row">
+                  <span class="checkbox"></span>
+                  <div class="op-content">
+                    <div class="op-name">Login and get access token</div>
+                    <div class="op-url">
+                      <span class="method post">POST</span> https://api.example.com/v1/auth/login
+                    </div>
+                  </div>
+                </div>
+                <div class="op-row">
+                  <span class="checkbox"></span>
+                  <div class="op-content">
+                    <div class="op-name">Create a new user account</div>
+                    <div class="op-url">
+                      <span class="method post">POST</span> https://api.example.com/v1/auth/register
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="op-row">
-                <span class="checkbox"></span>
-                <div class="op-content">
-                  <div class="op-name">Create a new user account</div>
-                  <div class="op-url"><span class="method post">POST</span> https://api.example.com/v1/auth/register
+              <div class="group">
+                <div class="group-header">
+                  <span class="checkbox"></span>
+                  <span class="group-title">Products</span>
+                  <span class="group-count">(3)</span>
+                </div>
+                <div class="op-row">
+                  <span class="checkbox"></span>
+                  <div class="op-content">
+                    <div class="op-name">List all products with filters</div>
+                    <div class="op-url">
+                      <span class="method get">GET</span> https://api.example.com/v1/products
+                    </div>
+                  </div>
+                </div>
+                <div class="op-row">
+                  <span class="checkbox"></span>
+                  <div class="op-content">
+                    <div class="op-name">Get product details by ID</div>
+                    <div class="op-url">
+                      <span class="method get">GET</span> https://api.example.com/v1/products/{id}
+                    </div>
+                  </div>
+                </div>
+                <div class="op-row">
+                  <span class="checkbox"></span>
+                  <div class="op-content">
+                    <div class="op-name">Get current user's cart</div>
+                    <div class="op-url">
+                      <span class="method get">GET</span> https://api.example.com/v1/cart
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="group">
+                <div class="group-header">
+                  <span class="checkbox"></span>
+                  <span class="group-title">Orders</span>
+                  <span class="group-count">(2)</span>
+                </div>
+                <div class="op-row">
+                  <span class="checkbox"></span>
+                  <div class="op-content">
+                    <div class="op-name">List your past orders</div>
+                    <div class="op-url">
+                      <span class="method get">GET</span> https://api.example.com/v1/orders
+                    </div>
+                  </div>
+                </div>
+                <div class="op-row">
+                  <span class="checkbox"></span>
+                  <div class="op-content">
+                    <div class="op-name">Checkout and place order</div>
+                    <div class="op-url">
+                      <span class="method post">POST</span> https://api.example.com/v1/checkout
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="group">
-              <div class="group-header">
-                <span class="checkbox"></span>
-                <span class="group-title">Products</span>
-                <span class="group-count">(3)</span>
-              </div>
-              <div class="op-row">
-                <span class="checkbox"></span>
-                <div class="op-content">
-                  <div class="op-name">List all products with filters</div>
-                  <div class="op-url"><span class="method get">GET</span> https://api.example.com/v1/products</div>
-                </div>
-              </div>
-              <div class="op-row">
-                <span class="checkbox"></span>
-                <div class="op-content">
-                  <div class="op-name">Get product details by ID</div>
-                  <div class="op-url"><span class="method get">GET</span> https://api.example.com/v1/products/{id}</div>
-                </div>
-              </div>
-              <div class="op-row">
-                <span class="checkbox"></span>
-                <div class="op-content">
-                  <div class="op-name">Get current user's cart</div>
-                  <div class="op-url"><span class="method get">GET</span> https://api.example.com/v1/cart</div>
-                </div>
-              </div>
-            </div>
-            <div class="group">
-              <div class="group-header">
-                <span class="checkbox"></span>
-                <span class="group-title">Orders</span>
-                <span class="group-count">(2)</span>
-              </div>
-              <div class="op-row">
-                <span class="checkbox"></span>
-                <div class="op-content">
-                  <div class="op-name">List your past orders</div>
-                  <div class="op-url"><span class="method get">GET</span> https://api.example.com/v1/orders</div>
-                </div>
-              </div>
-              <div class="op-row">
-                <span class="checkbox"></span>
-                <div class="op-content">
-                  <div class="op-name">Checkout and place order</div>
-                  <div class="op-url"><span class="method post">POST</span> https://api.example.com/v1/checkout</div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="toast">
-      <div class="toast-icon">✓</div>
-      <span class="toast-text">Collection imported</span>
+      <div class="toast">
+        <div class="toast-icon">✓</div>
+        <span class="toast-text">Collection imported</span>
+      </div>
     </div>
-  </div>
-</body>
-
+  </body>
 </html>

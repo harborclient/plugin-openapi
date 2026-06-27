@@ -1,4 +1,4 @@
-// node_modules/.pnpm/@harborclient+sdk@0.4.3_react@19.2.7/node_modules/@harborclient/sdk/dist/runtime/reactHost.js
+// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/runtime/reactHost.js
 var hostReact = null;
 function setHostReact(react) {
   hostReact = react;
@@ -12,12 +12,68 @@ function requireHostReact() {
   return hostReact;
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.4.3_react@19.2.7/node_modules/@harborclient/sdk/dist/runtime/index.js
+// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/runtime/index.js
 function installReact(react) {
   setHostReact(react);
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.4.3_react@19.2.7/node_modules/@harborclient/sdk/dist/runtime/react.js
+// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/runtime/jsx-runtime.js
+var Fragment = Symbol.for("@harborclient/sdk.Fragment");
+function build(type, props, key) {
+  const react = requireHostReact();
+  const elementType = type === Fragment ? react.Fragment : type;
+  const { children, ...rest } = props ?? {};
+  if (key !== void 0) {
+    rest.key = key;
+  }
+  return react.createElement(elementType, rest, children);
+}
+var jsx = build;
+var jsxs = build;
+
+// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/components/Button/index.js
+var VARIANT_CLASSES = {
+  primary: "cursor-pointer rounded-md border border-transparent bg-accent px-3 py-1 text-[15px] font-medium text-white shadow-sm hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50 app-no-drag",
+  secondary: "cursor-pointer rounded-md border border-separator bg-control px-3 py-1 text-[15px] text-text shadow-sm hover:bg-selection disabled:cursor-not-allowed disabled:opacity-50 app-no-drag",
+  primaryDanger: "cursor-pointer rounded-md border border-transparent bg-danger px-3 py-1 text-[15px] font-medium text-white shadow-sm hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50 app-no-drag",
+  secondaryDanger: "cursor-pointer rounded-md border border-separator bg-control px-3 py-1 text-[15px] text-danger shadow-sm hover:bg-danger/15 disabled:cursor-not-allowed disabled:opacity-50 app-no-drag",
+  toolbar: "cursor-pointer rounded-md border-none bg-transparent px-2 py-1 text-[15px] hover:bg-selection app-no-drag",
+  icon: "inline-flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded-md border-none bg-transparent text-muted opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 focus:opacity-100 focus-visible:opacity-100 hover:bg-selection hover:text-text app-no-drag",
+  iconDanger: "inline-flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded-md border-none bg-transparent text-muted opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 focus:opacity-100 focus-visible:opacity-100 hover:bg-danger/15 hover:text-danger app-no-drag"
+};
+function Button({ variant = "primary", className, type = "button", ...props }) {
+  const classes = className ? `${VARIANT_CLASSES[variant]} ${className}` : VARIANT_CLASSES[variant];
+  return jsx("button", { type, className: classes, ...props });
+}
+
+// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/components/FieldError/index.js
+function spacingClasses(spacing) {
+  switch (spacing) {
+    case "section":
+      return "mt-3";
+    case "modal":
+      return "mt-4";
+    case "field":
+    default:
+      return "mt-1";
+  }
+}
+function FieldError({ children, id, spacing = "field", roleAlert = false, className }) {
+  if (children == null || children === "")
+    return null;
+  const base = `${spacingClasses(spacing)} text-[14px] text-danger`;
+  const classes = className ? `${base} ${className}` : base;
+  return jsx("p", { id, className: classes, role: roleAlert ? "alert" : void 0, children });
+}
+
+// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/components/AsyncListState/index.js
+function LoadingMessage({ children = "Loading\u2026", className }) {
+  const base = "text-[14px] text-muted";
+  const classes = className ? `${base} ${className}` : base;
+  return jsx("p", { role: "status", className: classes, children });
+}
+
+// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/runtime/react.js
 function hook(name) {
   const react = requireHostReact();
   const fn = react[name];
@@ -37,6 +93,108 @@ function useCallback(callback, deps) {
 }
 function useMemo(factory, deps) {
   return hook("useMemo")(factory, deps);
+}
+function cloneElement(element, props, ...children) {
+  return hook("cloneElement")(element, props, ...children);
+}
+function isValidElement(element) {
+  return hook("isValidElement")(element);
+}
+
+// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/components/forms/classes.js
+var field = "rounded-md border border-separator bg-field px-2 py-1 text-[15px] text-text app-no-drag";
+var surfaceField = "w-full rounded-md border border-separator bg-field px-3 py-2 text-[14px] text-text";
+var VARIANT_CLASSES2 = {
+  control: field,
+  surface: surfaceField
+};
+function mergeFieldClasses(variant, className) {
+  const base = variant === "plain" ? "" : VARIANT_CLASSES2[variant];
+  if (base && className)
+    return `${base} ${className}`;
+  if (base)
+    return base;
+  if (className)
+    return className;
+  return void 0;
+}
+
+// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/components/forms/Input.js
+function Input({ ref, variant = "control", type, className, ...props }) {
+  const resolvedVariant = type === "checkbox" || type === "radio" ? "plain" : variant;
+  return jsx("input", { ref, type, className: mergeFieldClasses(resolvedVariant, className), ...props });
+}
+
+// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/components/FormGroup/index.js
+function labelClasses(tone, srOnly, inline) {
+  const base = "text-[14px]";
+  const visibility = srOnly ? "sr-only" : "";
+  if (inline) {
+    const color2 = tone === "muted" ? "shrink-0 text-muted" : "shrink-0 font-medium text-text";
+    return `${base} ${color2} ${visibility}`.trim();
+  }
+  const color = tone === "muted" ? "text-muted" : "font-medium text-text";
+  return `${base} ${color} ${visibility}`.trim();
+}
+function enhanceControl(child, describedBy) {
+  if (!describedBy || !isValidElement(child)) {
+    return child;
+  }
+  const existingDescribedBy = typeof child.props["aria-describedby"] === "string" ? child.props["aria-describedby"] : void 0;
+  const mergedDescribedBy = existingDescribedBy ? `${existingDescribedBy} ${describedBy}` : describedBy;
+  return cloneElement(child, {
+    "aria-invalid": true,
+    "aria-describedby": mergedDescribedBy
+  });
+}
+function FormGroup({ label, children, htmlFor, description, error, errorId, layout = "stacked", labelTone = "default", srOnly = false, className, labelClassName }) {
+  const extra = className ?? "";
+  if (layout === "associated") {
+    const associatedClasses = labelClassName ?? "text-[14px] text-text";
+    return jsx("label", { htmlFor, className: associatedClasses, children: label });
+  }
+  if (layout === "checkboxAdjacent") {
+    const wrapperClasses2 = extra ? `flex items-start gap-2 ${extra}` : "flex items-start gap-2";
+    const adjacentLabelClasses = labelClassName ?? "min-w-0 flex-1 text-[14px] text-text";
+    return jsxs("div", { className: wrapperClasses2, children: [children, jsx("label", { htmlFor, className: adjacentLabelClasses, children: label })] });
+  }
+  if (layout === "radio") {
+    const wrapperClasses2 = extra ? `inline-flex cursor-pointer items-center gap-1.5 text-[14px] text-text app-no-drag ${extra}` : "inline-flex cursor-pointer items-center gap-1.5 text-[14px] text-text app-no-drag";
+    return jsxs("label", { htmlFor, className: wrapperClasses2, children: [children, label] });
+  }
+  if (layout === "checkbox") {
+    const wrapperClasses2 = extra ? `flex items-center gap-2 ${extra}` : "flex items-center gap-2";
+    return jsxs("label", { htmlFor, className: wrapperClasses2, children: [children, jsx("span", { className: labelClasses(labelTone, srOnly, false), children: label })] });
+  }
+  if (layout === "inline") {
+    const wrapperClasses2 = extra ? `flex min-w-0 flex-1 items-center gap-2 ${extra}` : "flex min-w-0 flex-1 items-center gap-2";
+    return jsxs("label", { htmlFor, className: wrapperClasses2, children: [jsx("span", { className: labelClasses(labelTone, srOnly, true), children: label }), children] });
+  }
+  const resolvedErrorId = error != null && error !== "" ? errorId ?? (htmlFor ? `${htmlFor}-error` : void 0) : void 0;
+  const control = enhanceControl(children, resolvedErrorId);
+  const wrapperClasses = extra ? `flex flex-col gap-1 ${extra}` : "flex flex-col gap-1";
+  return jsxs("div", { className: wrapperClasses, children: [jsxs("label", { htmlFor, className: "flex flex-col gap-1", children: [jsx("span", { className: labelClasses(labelTone, srOnly, false), children: label }), control, description != null && description !== "" ? jsx("p", { className: "m-0 text-[14px] text-muted", children: description }) : null] }), resolvedErrorId ? jsx(FieldError, { id: resolvedErrorId, spacing: "field", children: error }) : null] });
+}
+
+// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/components/StatusMessage/index.js
+function StatusMessage({ children, live = true, id, className }) {
+  const base = "text-[14px] text-muted";
+  const classes = className ? `${base} ${className}` : base;
+  return jsx("p", { id, className: classes, role: live ? "status" : void 0, "aria-live": live ? "polite" : void 0, children });
+}
+
+// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/ui/tokens.js
+var METHOD_CLASSES = {
+  get: "text-method-get",
+  post: "text-method-post",
+  put: "text-method-put",
+  patch: "text-method-patch",
+  delete: "text-method-delete",
+  head: "text-method-head",
+  options: "text-method-options"
+};
+function methodColorClass(method) {
+  return METHOD_CLASSES[method.toLowerCase()] ?? "text-text";
 }
 
 // node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/nodes/identity.js
@@ -4684,8 +4842,8 @@ visit2.SKIP = SKIP2;
 visit2.REMOVE = REMOVE2;
 visit2.itemAtPath = (cst, path) => {
   let item = cst;
-  for (const [field, index] of path) {
-    const tok = item?.[field];
+  for (const [field2, index] of path) {
+    const tok = item?.[field2];
     if (tok && "items" in tok) {
       item = tok.items[index];
     } else
@@ -4695,8 +4853,8 @@ visit2.itemAtPath = (cst, path) => {
 };
 visit2.parentCollection = (cst, path) => {
   const parent = visit2.itemAtPath(cst, path.slice(0, -1));
-  const field = path[path.length - 1][0];
-  const coll = parent?.[field];
+  const field2 = path[path.length - 1][0];
+  const coll = parent?.[field2];
   if (coll && "items" in coll)
     return coll;
   throw new Error("Parent collection not found");
@@ -4705,11 +4863,11 @@ function _visit(path, item, visitor) {
   let ctrl = visitor(item, path);
   if (typeof ctrl === "symbol")
     return ctrl;
-  for (const field of ["key", "value"]) {
-    const token = item[field];
+  for (const field2 of ["key", "value"]) {
+    const token = item[field2];
     if (token && "items" in token) {
       for (let i = 0; i < token.items.length; ++i) {
-        const ci = _visit(Object.freeze(path.concat([[field, i]])), token.items[i], visitor);
+        const ci = _visit(Object.freeze(path.concat([[field2, i]])), token.items[i], visitor);
         if (typeof ci === "number")
           i = ci - 1;
         else if (ci === BREAK2)
@@ -4719,7 +4877,7 @@ function _visit(path, item, visitor) {
           i -= 1;
         }
       }
-      if (typeof ctrl === "function" && field === "key")
+      if (typeof ctrl === "function" && field2 === "key")
         ctrl = ctrl(item, path);
     }
   }
@@ -6307,15 +6465,7 @@ function parse(src, reviver, options) {
 }
 
 // src/openapi/parse.ts
-var HTTP_METHODS = [
-  "get",
-  "post",
-  "put",
-  "patch",
-  "delete",
-  "head",
-  "options"
-];
+var HTTP_METHODS = ["get", "post", "put", "patch", "delete", "head", "options"];
 function parseOpenApiSpec(text) {
   const document = parseDocument2(text);
   assertOpenApiVersion(document);
@@ -6347,7 +6497,7 @@ function parseDocument2(text) {
     return parsed;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    throw new Error(`Failed to parse OpenAPI document: ${message}`);
+    throw new Error(`Failed to parse OpenAPI document: ${message}`, { cause: error });
   }
 }
 function assertOpenApiVersion(document) {
@@ -6398,10 +6548,7 @@ function flattenOperations(document, baseUrl) {
         continue;
       }
       const operationObject = operation;
-      const mergedParameters = [
-        ...sharedParameters,
-        ...readParameters(operationObject)
-      ];
+      const mergedParameters = [...sharedParameters, ...readParameters(operationObject)];
       const body = readRequestBody(operationObject);
       const name = readOperationName(operationObject, method, path);
       const folder = readFirstTag(operationObject);
@@ -6578,9 +6725,7 @@ function sampleFromSchema(schema4) {
     const result = {};
     for (const [key, propertySchema] of Object.entries(schema4.properties)) {
       if (propertySchema && typeof propertySchema === "object") {
-        result[key] = sampleFromSchema(
-          propertySchema
-        );
+        result[key] = sampleFromSchema(propertySchema);
       } else {
         result[key] = "";
       }
@@ -6634,20 +6779,6 @@ function operationsToCreateRequests(operations) {
   }));
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.4.3_react@19.2.7/node_modules/@harborclient/sdk/dist/runtime/jsx-runtime.js
-var Fragment = Symbol.for("@harborclient/sdk.Fragment");
-function build(type, props, key) {
-  const react = requireHostReact();
-  const elementType = type === Fragment ? react.Fragment : type;
-  const { children, ...rest } = props ?? {};
-  if (key !== void 0) {
-    rest.key = key;
-  }
-  return react.createElement(elementType, rest, children);
-}
-var jsx = build;
-var jsxs = build;
-
 // src/components/ImportView.tsx
 var STORAGE_KEY_LAST_PATH = "lastSpecPath";
 function groupOperationsByFolder(operations) {
@@ -6658,9 +6789,7 @@ function groupOperationsByFolder(operations) {
     existing.push(operation);
     groups.set(folder, existing);
   }
-  return new Map(
-    [...groups.entries()].sort(([left], [right]) => left.localeCompare(right))
-  );
+  return new Map([...groups.entries()].sort(([left], [right]) => left.localeCompare(right)));
 }
 function ImportView({ hc }) {
   const [busy, setBusy] = useState(false);
@@ -6670,6 +6799,8 @@ function ImportView({ hc }) {
   const [parsedSpec, setParsedSpec] = useState(null);
   const [collectionName, setCollectionName] = useState("");
   const [selectedIds, setSelectedIds] = useState(/* @__PURE__ */ new Set());
+  const collectionNameError = error === "Collection name is required." ? error : void 0;
+  const globalError = error != null && error !== "Collection name is required." ? error : null;
   useEffect(() => {
     let active = true;
     void hc.storage.get(STORAGE_KEY_LAST_PATH).then((value) => {
@@ -6691,9 +6822,7 @@ function ImportView({ hc }) {
     if (!parsedSpec) {
       return [];
     }
-    return parsedSpec.operations.filter(
-      (operation) => selectedIds.has(operation.id)
-    );
+    return parsedSpec.operations.filter((operation) => selectedIds.has(operation.id));
   }, [parsedSpec, selectedIds]);
   const groupedOperations = useMemo(() => {
     if (!parsedSpec) {
@@ -6711,9 +6840,7 @@ function ImportView({ hc }) {
         setSpecPath(path);
         setParsedSpec(parsed);
         setCollectionName(parsed.title);
-        setSelectedIds(
-          new Set(parsed.operations.map((operation) => operation.id))
-        );
+        setSelectedIds(new Set(parsed.operations.map((operation) => operation.id)));
         await hc.storage.set(STORAGE_KEY_LAST_PATH, path);
       } catch (loadError) {
         setParsedSpec(null);
@@ -6791,9 +6918,7 @@ function ImportView({ hc }) {
         name: trimmedName,
         requests: operationsToCreateRequests(selectedOperations)
       });
-      hc.ui.showToast(
-        `Imported ${selectedOperations.length} requests into "${trimmedName}"`
-      );
+      hc.ui.showToast(`Imported ${selectedOperations.length} requests into "${trimmedName}"`);
       void result.collectionId;
     } catch (importError) {
       setError(
@@ -6810,10 +6935,9 @@ function ImportView({ hc }) {
         /* @__PURE__ */ jsx("p", { className: "text-[14px] text-muted", children: "Parse an OpenAPI 3.x spec locally and create a HarborClient collection grouped by tags." })
       ] }),
       /* @__PURE__ */ jsx(
-        "button",
+        Button,
         {
-          type: "button",
-          className: "rounded border border-separator bg-control px-3 py-2 text-[14px] text-text hover:bg-selection disabled:opacity-60",
+          variant: "secondary",
           disabled: busy || importing,
           onClick: () => {
             void handlePickFile();
@@ -6823,53 +6947,40 @@ function ImportView({ hc }) {
       )
     ] }),
     /* @__PURE__ */ jsxs("div", { className: "min-h-0 flex-1 overflow-auto p-4", children: [
-      busy ? /* @__PURE__ */ jsx("p", { className: "text-[14px] text-muted", role: "status", children: "Loading OpenAPI spec\u2026" }) : null,
-      error != null ? /* @__PURE__ */ jsx(
-        "p",
-        {
-          id: "openapi-import-error",
-          className: "mb-4 text-[14px] text-danger",
-          role: "status",
-          children: error
-        }
-      ) : null,
-      !parsedSpec && !busy ? /* @__PURE__ */ jsxs("p", { className: "text-[14px] text-muted", children: [
+      busy ? /* @__PURE__ */ jsx(LoadingMessage, { children: "Loading OpenAPI spec\u2026" }) : null,
+      globalError != null ? /* @__PURE__ */ jsx(StatusMessage, { id: "openapi-import-error", className: "mb-4 text-danger", live: true, children: globalError }) : null,
+      !parsedSpec && !busy ? /* @__PURE__ */ jsxs(StatusMessage, { live: false, children: [
         "Choose an OpenAPI JSON or YAML file to preview its operations before importing.",
         specPath != null ? /* @__PURE__ */ jsxs(Fragment, { children: [
           " ",
-          "Last file:",
-          " ",
+          "Last file: ",
           /* @__PURE__ */ jsx("span", { className: "font-mono text-text", children: specPath })
         ] }) : null
       ] }) : null,
       parsedSpec != null ? /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-4", children: [
         /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-2", children: [
           /* @__PURE__ */ jsx(
-            "label",
+            FormGroup,
             {
+              label: "Collection name",
               htmlFor: "openapi-collection-name",
-              className: "text-[14px] font-medium text-text",
-              children: "Collection name"
-            }
-          ),
-          /* @__PURE__ */ jsx(
-            "input",
-            {
-              id: "openapi-collection-name",
-              type: "text",
-              value: collectionName,
-              disabled: importing,
-              "aria-invalid": error != null && !collectionName.trim(),
-              "aria-describedby": error != null ? "openapi-import-error" : void 0,
-              className: "rounded border border-separator bg-field px-3 py-2 text-[14px] text-text",
-              onChange: (event) => {
-                setCollectionName(event.target.value);
-              }
+              error: collectionNameError,
+              children: /* @__PURE__ */ jsx(
+                Input,
+                {
+                  id: "openapi-collection-name",
+                  type: "text",
+                  value: collectionName,
+                  disabled: importing,
+                  onChange: (event) => {
+                    setCollectionName(event.target.value);
+                  }
+                }
+              )
             }
           ),
           specPath != null ? /* @__PURE__ */ jsxs("p", { className: "text-[14px] text-muted", children: [
-            "Source:",
-            " ",
+            "Source: ",
             /* @__PURE__ */ jsx("span", { className: "font-mono text-text-secondary", children: specPath })
           ] }) : null,
           parsedSpec.baseUrl ? /* @__PURE__ */ jsxs("p", { className: "text-[14px] text-muted", children: [
@@ -6883,14 +6994,12 @@ function ImportView({ hc }) {
             selectedOperations.length,
             " of ",
             parsedSpec.operations.length,
-            " ",
-            "operations selected"
+            " operations selected"
           ] }),
           /* @__PURE__ */ jsx(
-            "button",
+            Button,
             {
-              type: "button",
-              className: "rounded bg-accent px-4 py-2 text-[14px] font-medium text-surface disabled:opacity-60",
+              variant: "primary",
               disabled: importing || selectedOperations.length === 0,
               onClick: () => {
                 void handleImport();
@@ -6901,10 +7010,7 @@ function ImportView({ hc }) {
         ] }),
         /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-4", children: [...groupedOperations.entries()].map(([folder, operations]) => {
           const folderLabel = folder || "Untagged";
-          const folderCheckboxId = `openapi-folder-${folderLabel.replace(
-            /\s+/g,
-            "-"
-          )}`;
+          const folderCheckboxId = `openapi-folder-${folderLabel.replace(/\s+/g, "-")}`;
           const selectedInFolder = operations.filter(
             (operation) => selectedIds.has(operation.id)
           ).length;
@@ -6918,7 +7024,7 @@ function ImportView({ hc }) {
               children: [
                 /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 border-b border-separator px-3 py-2", children: [
                   /* @__PURE__ */ jsx(
-                    "input",
+                    Input,
                     {
                       id: folderCheckboxId,
                       type: "checkbox",
@@ -6950,43 +7056,35 @@ function ImportView({ hc }) {
                 ] }),
                 /* @__PURE__ */ jsx("ul", { className: "divide-y divide-separator", children: operations.map((operation) => {
                   const checkboxId = `openapi-operation-${operation.id}`;
-                  return /* @__PURE__ */ jsxs(
-                    "li",
+                  return /* @__PURE__ */ jsx("li", { className: "px-3 py-2", children: /* @__PURE__ */ jsx(
+                    FormGroup,
                     {
-                      className: "flex items-start gap-3 px-3 py-2",
-                      children: [
-                        /* @__PURE__ */ jsx(
-                          "input",
-                          {
-                            id: checkboxId,
-                            type: "checkbox",
-                            checked: selectedIds.has(operation.id),
-                            disabled: importing,
-                            onChange: () => {
-                              handleToggleOperation(operation.id);
-                            }
+                      layout: "checkboxAdjacent",
+                      htmlFor: checkboxId,
+                      labelClassName: "min-w-0 flex-1 cursor-pointer",
+                      label: /* @__PURE__ */ jsxs(Fragment, { children: [
+                        /* @__PURE__ */ jsx("span", { className: "block text-[14px] font-medium text-text", children: operation.name }),
+                        /* @__PURE__ */ jsxs("span", { className: "mt-1 block font-mono text-[14px] text-text-secondary", children: [
+                          /* @__PURE__ */ jsx("span", { className: methodColorClass(operation.method), children: operation.method }),
+                          " ",
+                          operation.url
+                        ] }),
+                        operation.comment ? /* @__PURE__ */ jsx("span", { className: "mt-1 block text-[14px] text-muted", children: operation.comment }) : null
+                      ] }),
+                      children: /* @__PURE__ */ jsx(
+                        Input,
+                        {
+                          id: checkboxId,
+                          type: "checkbox",
+                          checked: selectedIds.has(operation.id),
+                          disabled: importing,
+                          onChange: () => {
+                            handleToggleOperation(operation.id);
                           }
-                        ),
-                        /* @__PURE__ */ jsxs(
-                          "label",
-                          {
-                            htmlFor: checkboxId,
-                            className: "min-w-0 flex-1 cursor-pointer",
-                            children: [
-                              /* @__PURE__ */ jsx("span", { className: "block text-[14px] font-medium text-text", children: operation.name }),
-                              /* @__PURE__ */ jsxs("span", { className: "mt-1 block font-mono text-[14px] text-text-secondary", children: [
-                                operation.method,
-                                " ",
-                                operation.url
-                              ] }),
-                              operation.comment ? /* @__PURE__ */ jsx("span", { className: "mt-1 block text-[14px] text-muted", children: operation.comment }) : null
-                            ]
-                          }
-                        )
-                      ]
-                    },
-                    operation.id
-                  );
+                        }
+                      )
+                    }
+                  ) }, operation.id);
                 }) })
               ]
             },
@@ -7008,11 +7106,7 @@ function activate(hc) {
   }
   hc.subscriptions.push(
     hc.commands.register(COMMAND_ID, () => {
-      void hc.commands.execute(
-        "harborclient:openMainView",
-        hc.pluginId,
-        MAIN_VIEW_ID
-      );
+      void hc.commands.execute("harborclient:openMainView", hc.pluginId, MAIN_VIEW_ID);
     })
   );
   hc.subscriptions.push(

@@ -1,25 +1,33 @@
 {
   "name": "@harborclient/plugin-openapi",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "type": "module",
   "scripts": {
-    "build": "esbuild src/renderer.tsx --bundle --outfile=dist/renderer.js --format=esm --jsx=automatic --jsx-import-source=@harborclient/sdk --external:react --external:react-dom",
-    "dev": "esbuild src/renderer.tsx --bundle --outfile=dist/renderer.js --format=esm --jsx=automatic --jsx-import-source=@harborclient/sdk --external:react --external:react-dom --watch",
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/build.mjs --watch",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "lint": "eslint --cache .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "pack": "pnpm build && zip -r openapi.hcp manifest.json README.md dist",
     "plugin:sign": "node --experimental-strip-types scripts/plugin-sign.ts",
     "plugin:verify": "node --experimental-strip-types scripts/plugin-verify.ts"
   },
   "dependencies": {
+    "@harborclient/sdk": "^0.5.0",
     "yaml": "^2.8.0"
   },
   "devDependencies": {
-    "@harborclient/sdk": "^0.4.3",
+    "@eslint/js": "^10.0.1",
     "@types/node": "^26.0.1",
     "@types/react": "^19.1.8",
     "esbuild": "^0.25.0",
+    "eslint": "^10.5.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.8.4",
     "typescript": "^5.8.3",
+    "typescript-eslint": "^8.62.0",
     "vitest": "^3.2.4"
   }
 }

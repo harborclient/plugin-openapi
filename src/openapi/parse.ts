@@ -1,18 +1,7 @@
-import { parse as parseYaml } from "yaml";
-import type {
-  BodyType,
-  CreateCollectionRequest,
-} from "@harborclient/sdk";
+import { parse as parseYaml } from 'yaml';
+import type { BodyType, CreateCollectionRequest } from '@harborclient/sdk';
 
-const HTTP_METHODS = [
-  "get",
-  "post",
-  "put",
-  "patch",
-  "delete",
-  "head",
-  "options",
-] as const;
+const HTTP_METHODS = ['get', 'post', 'put', 'patch', 'delete', 'head', 'options'] as const;
 
 type HttpMethodName = (typeof HTTP_METHODS)[number];
 
@@ -106,7 +95,7 @@ export function parseOpenApiSpec(text: string): ParsedOpenApiSpec {
   const operations = flattenOperations(document, baseUrl);
 
   if (operations.length === 0) {
-    throw new Error("No HTTP operations were found in the OpenAPI document.");
+    throw new Error('No HTTP operations were found in the OpenAPI document.');
   }
 
   return { title, baseUrl, operations };
@@ -121,26 +110,26 @@ export function parseOpenApiSpec(text: string): ParsedOpenApiSpec {
 function parseDocument(text: string): Record<string, unknown> {
   const trimmed = text.trim();
   if (!trimmed) {
-    throw new Error("The OpenAPI file is empty.");
+    throw new Error('The OpenAPI file is empty.');
   }
 
   try {
-    if (trimmed.startsWith("{")) {
+    if (trimmed.startsWith('{')) {
       const parsed: unknown = JSON.parse(trimmed);
-      if (!parsed || typeof parsed !== "object") {
-        throw new Error("OpenAPI JSON must be an object.");
+      if (!parsed || typeof parsed !== 'object') {
+        throw new Error('OpenAPI JSON must be an object.');
       }
       return parsed as Record<string, unknown>;
     }
 
     const parsed: unknown = parseYaml(trimmed);
-    if (!parsed || typeof parsed !== "object") {
-      throw new Error("OpenAPI YAML must be an object.");
+    if (!parsed || typeof parsed !== 'object') {
+      throw new Error('OpenAPI YAML must be an object.');
     }
     return parsed as Record<string, unknown>;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    throw new Error(`Failed to parse OpenAPI document: ${message}`);
+    throw new Error(`Failed to parse OpenAPI document: ${message}`, { cause: error });
   }
 }
 
@@ -150,10 +139,9 @@ function parseDocument(text: string): Record<string, unknown> {
  * @param document - Parsed OpenAPI root object.
  */
 function assertOpenApiVersion(document: Record<string, unknown>): void {
-  const version =
-    typeof document.openapi === "string" ? document.openapi.trim() : "";
-  if (!version.startsWith("3.")) {
-    throw new Error("Only OpenAPI 3.x documents are supported.");
+  const version = typeof document.openapi === 'string' ? document.openapi.trim() : '';
+  if (!version.startsWith('3.')) {
+    throw new Error('Only OpenAPI 3.x documents are supported.');
   }
 }
 
@@ -165,13 +153,13 @@ function assertOpenApiVersion(document: Record<string, unknown>): void {
  */
 function readInfoTitle(document: Record<string, unknown>): string {
   const info = document.info;
-  if (info && typeof info === "object") {
+  if (info && typeof info === 'object') {
     const title = (info as { title?: unknown }).title;
-    if (typeof title === "string" && title.trim()) {
+    if (typeof title === 'string' && title.trim()) {
       return title.trim();
     }
   }
-  return "Imported API";
+  return 'Imported API';
 }
 
 /**
@@ -183,20 +171,20 @@ function readInfoTitle(document: Record<string, unknown>): string {
 function readBaseUrl(document: Record<string, unknown>): string {
   const servers = document.servers;
   if (!Array.isArray(servers) || servers.length === 0) {
-    return "";
+    return '';
   }
 
   const first = servers[0];
-  if (!first || typeof first !== "object") {
-    return "";
+  if (!first || typeof first !== 'object') {
+    return '';
   }
 
   const url = (first as { url?: unknown }).url;
-  if (typeof url !== "string") {
-    return "";
+  if (typeof url !== 'string') {
+    return '';
   }
 
-  return url.trim().replace(/\/+$/, "");
+  return url.trim().replace(/\/+$/, '');
 }
 
 /**
@@ -211,14 +199,14 @@ function flattenOperations(
   baseUrl: string
 ): ParsedOpenApiOperation[] {
   const paths = document.paths;
-  if (!paths || typeof paths !== "object") {
+  if (!paths || typeof paths !== 'object') {
     return [];
   }
 
   const operations: ParsedOpenApiOperation[] = [];
 
   for (const [path, pathItem] of Object.entries(paths)) {
-    if (!pathItem || typeof pathItem !== "object") {
+    if (!pathItem || typeof pathItem !== 'object') {
       continue;
     }
 
@@ -226,15 +214,12 @@ function flattenOperations(
 
     for (const method of HTTP_METHODS) {
       const operation = (pathItem as Record<string, unknown>)[method];
-      if (!operation || typeof operation !== "object") {
+      if (!operation || typeof operation !== 'object') {
         continue;
       }
 
       const operationObject = operation as Record<string, unknown>;
-      const mergedParameters = [
-        ...sharedParameters,
-        ...readParameters(operationObject),
-      ];
+      const mergedParameters = [...sharedParameters, ...readParameters(operationObject)];
       const body = readRequestBody(operationObject);
       const name = readOperationName(operationObject, method, path);
       const folder = readFirstTag(operationObject);
@@ -250,13 +235,13 @@ function flattenOperations(
         bodyType: body.bodyType,
         headers: readHeaderParameters(mergedParameters),
         params: readQueryParameters(mergedParameters),
-        comment,
+        comment
       });
     }
   }
 
   return operations.sort((left, right) => {
-    const folderCompare = (left.folder ?? "").localeCompare(right.folder ?? "");
+    const folderCompare = (left.folder ?? '').localeCompare(right.folder ?? '');
     if (folderCompare !== 0) {
       return folderCompare;
     }
@@ -282,12 +267,12 @@ function readOperationName(
   path: string
 ): string {
   const operationId = operation.operationId;
-  if (typeof operationId === "string" && operationId.trim()) {
+  if (typeof operationId === 'string' && operationId.trim()) {
     return operationId.trim();
   }
 
   const summary = operation.summary;
-  if (typeof summary === "string" && summary.trim()) {
+  if (typeof summary === 'string' && summary.trim()) {
     return summary.trim();
   }
 
@@ -307,7 +292,7 @@ function readFirstTag(operation: Record<string, unknown>): string | undefined {
   }
 
   const first = tags[0];
-  if (typeof first !== "string" || !first.trim()) {
+  if (typeof first !== 'string' || !first.trim()) {
     return undefined;
   }
 
@@ -320,11 +305,9 @@ function readFirstTag(operation: Record<string, unknown>): string | undefined {
  * @param operation - OpenAPI operation object.
  * @returns Trimmed description text.
  */
-function readDescription(
-  operation: Record<string, unknown>
-): string | undefined {
+function readDescription(operation: Record<string, unknown>): string | undefined {
   const description = operation.description;
-  if (typeof description === "string" && description.trim()) {
+  if (typeof description === 'string' && description.trim()) {
     return description.trim();
   }
   return undefined;
@@ -336,9 +319,7 @@ function readDescription(
  * @param container - OpenAPI path item or operation object.
  * @returns Parameter objects declared on the container.
  */
-function readParameters(
-  container: Record<string, unknown>
-): Array<Record<string, unknown>> {
+function readParameters(container: Record<string, unknown>): Array<Record<string, unknown>> {
   const parameters = container.parameters;
   if (!Array.isArray(parameters)) {
     return [];
@@ -346,7 +327,7 @@ function readParameters(
 
   return parameters.filter(
     (parameter): parameter is Record<string, unknown> =>
-      Boolean(parameter) && typeof parameter === "object"
+      Boolean(parameter) && typeof parameter === 'object'
   );
 }
 
@@ -364,7 +345,7 @@ function readHeaderParameters(
   for (const parameter of parameters) {
     const location = parameter.in;
     const name = parameter.name;
-    if (location !== "header" || typeof name !== "string" || !name.trim()) {
+    if (location !== 'header' || typeof name !== 'string' || !name.trim()) {
       continue;
     }
 
@@ -388,13 +369,13 @@ function readQueryParameters(
   for (const parameter of parameters) {
     const location = parameter.in;
     const name = parameter.name;
-    if (location !== "query" || typeof name !== "string" || !name.trim()) {
+    if (location !== 'query' || typeof name !== 'string' || !name.trim()) {
       continue;
     }
 
     params.push({
       key: name.trim(),
-      value: readParameterExample(parameter),
+      value: readParameterExample(parameter)
     });
   }
 
@@ -414,9 +395,8 @@ function readParameterExample(parameter: Record<string, unknown>): string {
   }
 
   const schema = parameter.schema;
-  if (schema && typeof schema === "object") {
-    const schemaExample = (schema as { example?: unknown; default?: unknown })
-      .example;
+  if (schema && typeof schema === 'object') {
+    const schemaExample = (schema as { example?: unknown; default?: unknown }).example;
     if (schemaExample != null) {
       return stringifyExample(schemaExample);
     }
@@ -426,7 +406,7 @@ function readParameterExample(parameter: Record<string, unknown>): string {
     }
   }
 
-  return "";
+  return '';
 }
 
 /**
@@ -440,30 +420,30 @@ function readRequestBody(operation: Record<string, unknown>): {
   bodyType?: BodyType;
 } {
   const requestBody = operation.requestBody;
-  if (!requestBody || typeof requestBody !== "object") {
+  if (!requestBody || typeof requestBody !== 'object') {
     return {};
   }
 
   const content = (requestBody as { content?: unknown }).content;
-  if (!content || typeof content !== "object") {
+  if (!content || typeof content !== 'object') {
     return {};
   }
 
-  const jsonContent = (content as Record<string, unknown>)["application/json"];
-  if (jsonContent && typeof jsonContent === "object") {
+  const jsonContent = (content as Record<string, unknown>)['application/json'];
+  if (jsonContent && typeof jsonContent === 'object') {
     const body = readJsonContent(jsonContent as Record<string, unknown>);
     if (body) {
-      return { body, bodyType: "json" };
+      return { body, bodyType: 'json' };
     }
   }
 
   const textContent =
-    (content as Record<string, unknown>)["text/plain"] ??
-    (content as Record<string, unknown>)["text/html"];
-  if (textContent && typeof textContent === "object") {
+    (content as Record<string, unknown>)['text/plain'] ??
+    (content as Record<string, unknown>)['text/html'];
+  if (textContent && typeof textContent === 'object') {
     const example = (textContent as { example?: unknown }).example;
     if (example != null) {
-      return { body: stringifyExample(example), bodyType: "text" };
+      return { body: stringifyExample(example), bodyType: 'text' };
     }
   }
 
@@ -476,18 +456,16 @@ function readRequestBody(operation: Record<string, unknown>): {
  * @param jsonContent - OpenAPI JSON media type object.
  * @returns JSON string or undefined when no body could be inferred.
  */
-function readJsonContent(
-  jsonContent: Record<string, unknown>
-): string | undefined {
+function readJsonContent(jsonContent: Record<string, unknown>): string | undefined {
   const example = jsonContent.example;
   if (example != null) {
     return stringifyExample(example);
   }
 
   const examples = jsonContent.examples;
-  if (examples && typeof examples === "object") {
+  if (examples && typeof examples === 'object') {
     const first = Object.values(examples)[0];
-    if (first && typeof first === "object") {
+    if (first && typeof first === 'object') {
       const value = (first as { value?: unknown }).value;
       if (value != null) {
         return stringifyExample(value);
@@ -496,7 +474,7 @@ function readJsonContent(
   }
 
   const schema = jsonContent.schema;
-  if (schema && typeof schema === "object") {
+  if (schema && typeof schema === 'object') {
     const sample = sampleFromSchema(schema as Record<string, unknown>);
     if (sample != null) {
       return JSON.stringify(sample, null, 2);
@@ -524,40 +502,34 @@ function sampleFromSchema(schema: Record<string, unknown>): unknown {
   }
 
   const schemaType = schema.type;
-  if (
-    schemaType === "object" &&
-    schema.properties &&
-    typeof schema.properties === "object"
-  ) {
+  if (schemaType === 'object' && schema.properties && typeof schema.properties === 'object') {
     const result: Record<string, unknown> = {};
     for (const [key, propertySchema] of Object.entries(schema.properties)) {
-      if (propertySchema && typeof propertySchema === "object") {
-        result[key] = sampleFromSchema(
-          propertySchema as Record<string, unknown>
-        );
+      if (propertySchema && typeof propertySchema === 'object') {
+        result[key] = sampleFromSchema(propertySchema as Record<string, unknown>);
       } else {
-        result[key] = "";
+        result[key] = '';
       }
     }
     return result;
   }
 
-  if (schemaType === "array") {
+  if (schemaType === 'array') {
     const items = schema.items;
-    if (items && typeof items === "object") {
+    if (items && typeof items === 'object') {
       return [sampleFromSchema(items as Record<string, unknown>)];
     }
     return [];
   }
 
-  if (schemaType === "boolean") {
+  if (schemaType === 'boolean') {
     return false;
   }
-  if (schemaType === "integer" || schemaType === "number") {
+  if (schemaType === 'integer' || schemaType === 'number') {
     return 0;
   }
 
-  return "";
+  return '';
 }
 
 /**
@@ -567,10 +539,10 @@ function sampleFromSchema(schema: Record<string, unknown>): unknown {
  * @returns String representation for headers, params, or bodies.
  */
 function stringifyExample(value: unknown): string {
-  if (typeof value === "string") {
+  if (typeof value === 'string') {
     return value;
   }
-  if (typeof value === "number" || typeof value === "boolean") {
+  if (typeof value === 'number' || typeof value === 'boolean') {
     return String(value);
   }
   return JSON.stringify(value, null, 2);
@@ -587,10 +559,10 @@ function joinUrl(baseUrl: string, path: string): string {
   if (!baseUrl) {
     return path;
   }
-  if (path.startsWith("http://") || path.startsWith("https://")) {
+  if (path.startsWith('http://') || path.startsWith('https://')) {
     return path;
   }
-  return `${baseUrl}${path.startsWith("/") ? path : `/${path}`}`;
+  return `${baseUrl}${path.startsWith('/') ? path : `/${path}`}`;
 }
 
 /**
@@ -611,6 +583,6 @@ export function operationsToCreateRequests(
     body: operation.body,
     bodyType: operation.bodyType,
     folder: operation.folder,
-    comment: operation.comment,
+    comment: operation.comment
   }));
 }

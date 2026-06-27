@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
-import { parseOpenApiSpec } from "./parse";
+import { describe, expect, it } from 'vitest';
+import { parseOpenApiSpec } from './parse';
 
 const PETSTORE_SPEC = `
 openapi: 3.0.3
@@ -45,33 +45,27 @@ paths:
           description: OK
 `;
 
-describe("parseOpenApiSpec", () => {
-  it("parses YAML OpenAPI 3 specs into tagged operations", () => {
+describe('parseOpenApiSpec', () => {
+  it('parses YAML OpenAPI 3 specs into tagged operations', () => {
     const parsed = parseOpenApiSpec(PETSTORE_SPEC);
 
-    expect(parsed.title).toBe("Petstore");
-    expect(parsed.baseUrl).toBe("https://api.example.com/v1");
+    expect(parsed.title).toBe('Petstore');
+    expect(parsed.baseUrl).toBe('https://api.example.com/v1');
     expect(parsed.operations).toHaveLength(3);
 
-    const listPets = parsed.operations.find(
-      (operation) => operation.name === "List pets"
-    );
-    expect(listPets?.method).toBe("GET");
-    expect(listPets?.url).toBe("https://api.example.com/v1/pets");
-    expect(listPets?.folder).toBe("pets");
-    expect(listPets?.params).toEqual([{ key: "limit", value: "10" }]);
+    const listPets = parsed.operations.find((operation) => operation.name === 'List pets');
+    expect(listPets?.method).toBe('GET');
+    expect(listPets?.url).toBe('https://api.example.com/v1/pets');
+    expect(listPets?.folder).toBe('pets');
+    expect(listPets?.params).toEqual([{ key: 'limit', value: '10' }]);
 
-    const createPet = parsed.operations.find(
-      (operation) => operation.name === "createPet"
-    );
-    expect(createPet?.method).toBe("POST");
-    expect(createPet?.bodyType).toBe("json");
+    const createPet = parsed.operations.find((operation) => operation.name === 'createPet');
+    expect(createPet?.method).toBe('POST');
+    expect(createPet?.bodyType).toBe('json');
     expect(createPet?.body).toContain('"name"');
   });
 
-  it("rejects unsupported OpenAPI versions", () => {
-    expect(() => parseOpenApiSpec('{"openapi":"2.0","paths":{}}')).toThrow(
-      /OpenAPI 3.x/
-    );
+  it('rejects unsupported OpenAPI versions', () => {
+    expect(() => parseOpenApiSpec('{"openapi":"2.0","paths":{}}')).toThrow(/OpenAPI 3.x/);
   });
 });

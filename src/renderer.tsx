@@ -1,9 +1,9 @@
-import { installReact } from "@harborclient/sdk";
-import type { PluginContext } from "@harborclient/sdk";
-import { ImportView } from "./components/ImportView";
+import { installReact } from '@harborclient/sdk';
+import type { PluginContext } from '@harborclient/sdk';
+import { ImportView } from './components/ImportView';
 
-const MAIN_VIEW_ID = "openapi.import";
-const COMMAND_ID = "openapi.import";
+const MAIN_VIEW_ID = 'openapi.import';
+const COMMAND_ID = 'openapi.import';
 
 /**
  * Activates the renderer half and registers the OpenAPI import UI contributions.
@@ -22,28 +22,24 @@ export function activate(hc: PluginContext): void {
 
   hc.subscriptions.push(
     hc.commands.register(COMMAND_ID, () => {
-      void hc.commands.execute(
-        "harborclient:openMainView",
-        hc.pluginId,
-        MAIN_VIEW_ID
-      );
+      void hc.commands.execute('harborclient:openMainView', hc.pluginId, MAIN_VIEW_ID);
     })
   );
 
   hc.subscriptions.push(
     hc.ui.registerMainView({
       id: MAIN_VIEW_ID,
-      title: "Import OpenAPI",
-      Component: ImportViewHost,
+      title: 'Import OpenAPI',
+      Component: ImportViewHost
     })
   );
 
   hc.subscriptions.push(
     hc.ui.registerMenuItem({
-      menu: "file",
+      menu: 'file',
       command: COMMAND_ID,
-      label: "Import OpenAPI",
-      group: "import",
+      label: 'Import OpenAPI',
+      group: 'import'
     })
   );
 }

@@ -1,18 +1,21 @@
 import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "@harborclient/sdk/react";
-import type { PluginContext } from "@harborclient/sdk";
+  Button,
+  FormGroup,
+  Input,
+  LoadingMessage,
+  StatusMessage
+} from '@harborclient/sdk/components';
+import type { PluginContext } from '@harborclient/sdk';
+import { useCallback, useEffect, useMemo, useState } from '@harborclient/sdk/react';
+import { methodColorClass } from '@harborclient/sdk/ui';
 import {
   operationsToCreateRequests,
   parseOpenApiSpec,
   type ParsedOpenApiOperation,
-  type ParsedOpenApiSpec,
-} from "../openapi/parse";
+  type ParsedOpenApiSpec
+} from '../openapi/parse';
 
-const STORAGE_KEY_LAST_PATH = "lastSpecPath";
+const STORAGE_KEY_LAST_PATH = 'lastSpecPath';
 
 interface Props {
   /**
@@ -33,15 +36,13 @@ function groupOperationsByFolder(
   const groups = new Map<string, ParsedOpenApiOperation[]>();
 
   for (const operation of operations) {
-    const folder = operation.folder ?? "";
+    const folder = operation.folder ?? '';
     const existing = groups.get(folder) ?? [];
     existing.push(operation);
     groups.set(folder, existing);
   }
 
-  return new Map(
-    [...groups.entries()].sort(([left], [right]) => left.localeCompare(right))
-  );
+  return new Map([...groups.entries()].sort(([left], [right]) => left.localeCompare(right)));
 }
 
 /**
@@ -53,8 +54,11 @@ export function ImportView({ hc }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [specPath, setSpecPath] = useState<string | null>(null);
   const [parsedSpec, setParsedSpec] = useState<ParsedOpenApiSpec | null>(null);
-  const [collectionName, setCollectionName] = useState("");
+  const [collectionName, setCollectionName] = useState('');
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+
+  const collectionNameError = error === 'Collection name is required.' ? error : undefined;
+  const globalError = error != null && error !== 'Collection name is required.' ? error : null;
 
   /**
    * Loads the last picked spec path from plugin storage on mount.
@@ -64,7 +68,7 @@ export function ImportView({ hc }: Props) {
     void hc.storage
       .get<string>(STORAGE_KEY_LAST_PATH)
       .then((value) => {
-        if (active && typeof value === "string" && value.trim()) {
+        if (active && typeof value === 'string' && value.trim()) {
           setSpecPath(value);
         }
       })
@@ -92,9 +96,7 @@ export function ImportView({ hc }: Props) {
     if (!parsedSpec) {
       return [];
     }
-    return parsedSpec.operations.filter((operation) =>
-      selectedIds.has(operation.id)
-    );
+    return parsedSpec.operations.filter((operation) => selectedIds.has(operation.id));
   }, [parsedSpec, selectedIds]);
 
   /**
@@ -122,17 +124,13 @@ export function ImportView({ hc }: Props) {
         setSpecPath(path);
         setParsedSpec(parsed);
         setCollectionName(parsed.title);
-        setSelectedIds(
-          new Set(parsed.operations.map((operation) => operation.id))
-        );
+        setSelectedIds(new Set(parsed.operations.map((operation) => operation.id)));
         await hc.storage.set(STORAGE_KEY_LAST_PATH, path);
       } catch (loadError) {
         setParsedSpec(null);
         setSelectedIds(new Set());
         setError(
-          loadError instanceof Error
-            ? loadError.message
-            : "Failed to read the OpenAPI file."
+          loadError instanceof Error ? loadError.message : 'Failed to read the OpenAPI file.'
         );
       } finally {
         setBusy(false);
@@ -147,12 +145,12 @@ export function ImportView({ hc }: Props) {
   const handlePickFile = useCallback(async (): Promise<void> => {
     setError(null);
     const paths = await hc.fs.pickFile({
-      title: "Choose an OpenAPI spec",
+      title: 'Choose an OpenAPI spec',
       filters: [
-        { name: "OpenAPI", extensions: ["json", "yaml", "yml"] },
-        { name: "JSON", extensions: ["json"] },
-        { name: "YAML", extensions: ["yaml", "yml"] },
-      ],
+        { name: 'OpenAPI', extensions: ['json', 'yaml', 'yml'] },
+        { name: 'JSON', extensions: ['json'] },
+        { name: 'YAML', extensions: ['yaml', 'yml'] }
+      ]
     });
 
     if (paths.length === 0) {
@@ -194,7 +192,7 @@ export function ImportView({ hc }: Props) {
       setSelectedIds((current) => {
         const next = new Set(current);
         for (const operation of parsedSpec.operations) {
-          if ((operation.folder ?? "") === folder) {
+          if ((operation.folder ?? '') === folder) {
             if (checked) {
               next.add(operation.id);
             } else {
@@ -214,11 +212,11 @@ export function ImportView({ hc }: Props) {
   const handleImport = useCallback(async (): Promise<void> => {
     const trimmedName = collectionName.trim();
     if (!trimmedName) {
-      setError("Collection name is required.");
+      setError('Collection name is required.');
       return;
     }
     if (selectedOperations.length === 0) {
-      setError("Select at least one operation to import.");
+      setError('Select at least one operation to import.');
       return;
     }
 
@@ -227,17 +225,13 @@ export function ImportView({ hc }: Props) {
     try {
       const result = await hc.host.createCollection({
         name: trimmedName,
-        requests: operationsToCreateRequests(selectedOperations),
+        requests: operationsToCreateRequests(selectedOperations)
       });
-      hc.ui.showToast(
-        `Imported ${selectedOperations.length} requests into "${trimmedName}"`
-      );
+      hc.ui.showToast(`Imported ${selectedOperations.length} requests into "${trimmedName}"`);
       void result.collectionId;
     } catch (importError) {
       setError(
-        importError instanceof Error
-          ? importError.message
-          : "Failed to import the OpenAPI spec."
+        importError instanceof Error ? importError.message : 'Failed to import the OpenAPI spec.'
       );
     } finally {
       setImporting(false);
@@ -250,118 +244,91 @@ export function ImportView({ hc }: Props) {
         <div>
           <h1 className="text-[16px] font-medium text-text">Import OpenAPI</h1>
           <p className="text-[14px] text-muted">
-            Parse an OpenAPI 3.x spec locally and create a HarborClient
-            collection grouped by tags.
+            Parse an OpenAPI 3.x spec locally and create a HarborClient collection grouped by tags.
           </p>
         </div>
-        <button
-          type="button"
-          className="rounded border border-separator bg-control px-3 py-2 text-[14px] text-text hover:bg-selection disabled:opacity-60"
+        <Button
+          variant="secondary"
           disabled={busy || importing}
           onClick={() => {
             void handlePickFile();
           }}
         >
           Choose file…
-        </button>
+        </Button>
       </div>
 
       <div className="min-h-0 flex-1 overflow-auto p-4">
-        {busy ? (
-          <p className="text-[14px] text-muted" role="status">
-            Loading OpenAPI spec…
-          </p>
-        ) : null}
+        {busy ? <LoadingMessage>Loading OpenAPI spec…</LoadingMessage> : null}
 
-        {error != null ? (
-          <p
-            id="openapi-import-error"
-            className="mb-4 text-[14px] text-danger"
-            role="status"
-          >
-            {error}
-          </p>
+        {globalError != null ? (
+          <StatusMessage id="openapi-import-error" className="mb-4 text-danger" live>
+            {globalError}
+          </StatusMessage>
         ) : null}
 
         {!parsedSpec && !busy ? (
-          <p className="text-[14px] text-muted">
-            Choose an OpenAPI JSON or YAML file to preview its operations before
-            importing.
+          <StatusMessage live={false}>
+            Choose an OpenAPI JSON or YAML file to preview its operations before importing.
             {specPath != null ? (
               <>
-                {" "}
-                Last file:{" "}
-                <span className="font-mono text-text">{specPath}</span>
+                {' '}
+                Last file: <span className="font-mono text-text">{specPath}</span>
               </>
             ) : null}
-          </p>
+          </StatusMessage>
         ) : null}
 
         {parsedSpec != null ? (
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
-              <label
+              <FormGroup
+                label="Collection name"
                 htmlFor="openapi-collection-name"
-                className="text-[14px] font-medium text-text"
+                error={collectionNameError}
               >
-                Collection name
-              </label>
-              <input
-                id="openapi-collection-name"
-                type="text"
-                value={collectionName}
-                disabled={importing}
-                aria-invalid={error != null && !collectionName.trim()}
-                aria-describedby={
-                  error != null ? "openapi-import-error" : undefined
-                }
-                className="rounded border border-separator bg-field px-3 py-2 text-[14px] text-text"
-                onChange={(event) => {
-                  setCollectionName(event.target.value);
-                }}
-              />
+                <Input
+                  id="openapi-collection-name"
+                  type="text"
+                  value={collectionName}
+                  disabled={importing}
+                  onChange={(event) => {
+                    setCollectionName(event.target.value);
+                  }}
+                />
+              </FormGroup>
               {specPath != null ? (
                 <p className="text-[14px] text-muted">
-                  Source:{" "}
-                  <span className="font-mono text-text-secondary">
-                    {specPath}
-                  </span>
+                  Source: <span className="font-mono text-text-secondary">{specPath}</span>
                 </p>
               ) : null}
               {parsedSpec.baseUrl ? (
                 <p className="text-[14px] text-muted">
-                  Base URL:{" "}
-                  <span className="font-mono text-text-secondary">
-                    {parsedSpec.baseUrl}
-                  </span>
+                  Base URL:{' '}
+                  <span className="font-mono text-text-secondary">{parsedSpec.baseUrl}</span>
                 </p>
               ) : null}
             </div>
 
             <div className="flex items-center justify-between gap-3">
               <p className="text-[14px] text-text">
-                {selectedOperations.length} of {parsedSpec.operations.length}{" "}
-                operations selected
+                {selectedOperations.length} of {parsedSpec.operations.length} operations selected
               </p>
-              <button
-                type="button"
-                className="rounded bg-accent px-4 py-2 text-[14px] font-medium text-surface disabled:opacity-60"
+              <Button
+                variant="primary"
                 disabled={importing || selectedOperations.length === 0}
                 onClick={() => {
                   void handleImport();
                 }}
               >
-                {importing ? "Importing…" : "Import collection"}
-              </button>
+                {importing ? 'Importing…' : 'Import collection'}
+              </Button>
             </div>
 
             <div className="flex flex-col gap-4">
               {[...groupedOperations.entries()].map(([folder, operations]) => {
-                const folderLabel = folder || "Untagged";
-                const folderCheckboxId = `openapi-folder-${folderLabel.replace(
-                  /\s+/g,
-                  "-"
-                )}`;
+                const folderLabel = folder || 'Untagged';
+                const folderCheckboxId = `openapi-folder-${folderLabel.replace(/\s+/g, '-')}`;
                 const selectedInFolder = operations.filter((operation) =>
                   selectedIds.has(operation.id)
                 ).length;
@@ -375,7 +342,7 @@ export function ImportView({ hc }: Props) {
                     className="rounded border border-separator bg-control"
                   >
                     <div className="flex items-center gap-2 border-b border-separator px-3 py-2">
-                      <input
+                      <Input
                         id={folderCheckboxId}
                         type="checkbox"
                         checked={allSelected}
@@ -395,43 +362,46 @@ export function ImportView({ hc }: Props) {
                       >
                         {folderLabel}
                       </h2>
-                      <span className="text-[14px] text-muted">
-                        ({operations.length})
-                      </span>
+                      <span className="text-[14px] text-muted">({operations.length})</span>
                     </div>
                     <ul className="divide-y divide-separator">
                       {operations.map((operation) => {
                         const checkboxId = `openapi-operation-${operation.id}`;
                         return (
-                          <li
-                            key={operation.id}
-                            className="flex items-start gap-3 px-3 py-2"
-                          >
-                            <input
-                              id={checkboxId}
-                              type="checkbox"
-                              checked={selectedIds.has(operation.id)}
-                              disabled={importing}
-                              onChange={() => {
-                                handleToggleOperation(operation.id);
-                              }}
-                            />
-                            <label
+                          <li key={operation.id} className="px-3 py-2">
+                            <FormGroup
+                              layout="checkboxAdjacent"
                               htmlFor={checkboxId}
-                              className="min-w-0 flex-1 cursor-pointer"
+                              labelClassName="min-w-0 flex-1 cursor-pointer"
+                              label={
+                                <>
+                                  <span className="block text-[14px] font-medium text-text">
+                                    {operation.name}
+                                  </span>
+                                  <span className="mt-1 block font-mono text-[14px] text-text-secondary">
+                                    <span className={methodColorClass(operation.method)}>
+                                      {operation.method}
+                                    </span>{' '}
+                                    {operation.url}
+                                  </span>
+                                  {operation.comment ? (
+                                    <span className="mt-1 block text-[14px] text-muted">
+                                      {operation.comment}
+                                    </span>
+                                  ) : null}
+                                </>
+                              }
                             >
-                              <span className="block text-[14px] font-medium text-text">
-                                {operation.name}
-                              </span>
-                              <span className="mt-1 block font-mono text-[14px] text-text-secondary">
-                                {operation.method} {operation.url}
-                              </span>
-                              {operation.comment ? (
-                                <span className="mt-1 block text-[14px] text-muted">
-                                  {operation.comment}
-                                </span>
-                              ) : null}
-                            </label>
+                              <Input
+                                id={checkboxId}
+                                type="checkbox"
+                                checked={selectedIds.has(operation.id)}
+                                disabled={importing}
+                                onChange={() => {
+                                  handleToggleOperation(operation.id);
+                                }}
+                              />
+                            </FormGroup>
                           </li>
                         );
                       })}
