@@ -2,6 +2,9 @@
 
 HarborClient plugin that imports an OpenAPI 3.x specification and creates a collection with requests grouped by the first tag on each operation.
 
+![Screenshot](screenshot.png)
+
+
 ## Features
 
 - **File → Import OpenAPI** menu action
