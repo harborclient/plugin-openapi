@@ -1,9 +1,26 @@
-// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/runtime/reactHost.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.15_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_ba082a637edc564667da1417d93e49c1/node_modules/@harborclient/sdk/dist/runtime/reactHost.js
+var HOST_REACT_GLOBAL_KEY = "__HARBORCLIENT_HOST_REACT__";
 var hostReact = null;
+function readGlobalHostReact() {
+  if (typeof globalThis === "undefined") {
+    return null;
+  }
+  const candidate = globalThis[HOST_REACT_GLOBAL_KEY];
+  return candidate ?? null;
+}
 function setHostReact(react) {
   hostReact = react;
+  if (typeof globalThis !== "undefined") {
+    globalThis[HOST_REACT_GLOBAL_KEY] = react;
+  }
 }
 function requireHostReact() {
+  if (hostReact == null) {
+    const globalReact = readGlobalHostReact();
+    if (globalReact != null) {
+      hostReact = globalReact;
+    }
+  }
   if (hostReact == null) {
     throw new Error(
       "Plugin React host is not installed. Call installReact(hc.react) at the start of activate()."
@@ -12,12 +29,12 @@ function requireHostReact() {
   return hostReact;
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/runtime/index.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.15_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_ba082a637edc564667da1417d93e49c1/node_modules/@harborclient/sdk/dist/runtime/index.js
 function installReact(react) {
   setHostReact(react);
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/runtime/jsx-runtime.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.15_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_ba082a637edc564667da1417d93e49c1/node_modules/@harborclient/sdk/dist/runtime/jsx-runtime.js
 var Fragment = Symbol.for("@harborclient/sdk.Fragment");
 function build(type, props, key) {
   const react = requireHostReact();
@@ -31,22 +48,22 @@ function build(type, props, key) {
 var jsx = build;
 var jsxs = build;
 
-// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/components/Button/index.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.15_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_ba082a637edc564667da1417d93e49c1/node_modules/@harborclient/sdk/dist/components/Button/index.js
 var VARIANT_CLASSES = {
-  primary: "cursor-pointer rounded-md border border-transparent bg-accent px-3 py-1 text-[15px] font-medium text-white shadow-sm hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50 app-no-drag",
-  secondary: "cursor-pointer rounded-md border border-separator bg-control px-3 py-1 text-[15px] text-text shadow-sm hover:bg-selection disabled:cursor-not-allowed disabled:opacity-50 app-no-drag",
-  primaryDanger: "cursor-pointer rounded-md border border-transparent bg-danger px-3 py-1 text-[15px] font-medium text-white shadow-sm hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50 app-no-drag",
-  secondaryDanger: "cursor-pointer rounded-md border border-separator bg-control px-3 py-1 text-[15px] text-danger shadow-sm hover:bg-danger/15 disabled:cursor-not-allowed disabled:opacity-50 app-no-drag",
-  toolbar: "cursor-pointer rounded-md border-none bg-transparent px-2 py-1 text-[15px] hover:bg-selection app-no-drag",
-  icon: "inline-flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded-md border-none bg-transparent text-muted opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 focus:opacity-100 focus-visible:opacity-100 hover:bg-selection hover:text-text app-no-drag",
-  iconDanger: "inline-flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded-md border-none bg-transparent text-muted opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 focus:opacity-100 focus-visible:opacity-100 hover:bg-danger/15 hover:text-danger app-no-drag"
+  primary: "inline-flex min-h-[34px] cursor-pointer items-center justify-center rounded-md border border-transparent bg-accent px-3 py-1 text-[15px] font-medium text-white shadow-sm hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50 app-no-drag",
+  secondary: "inline-flex min-h-[34px] cursor-pointer items-center justify-center rounded-md border border-separator bg-control px-3 py-1 text-[15px] text-text shadow-sm hover:bg-selection disabled:cursor-not-allowed disabled:opacity-50 app-no-drag",
+  primaryDanger: "inline-flex min-h-[34px] cursor-pointer items-center justify-center rounded-md border border-transparent bg-danger px-3 py-1 text-[15px] font-medium text-white shadow-sm hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50 app-no-drag",
+  secondaryDanger: "inline-flex min-h-[34px] cursor-pointer items-center justify-center rounded-md border border-separator bg-control px-3 py-1 text-[15px] text-danger shadow-sm hover:bg-danger/15 disabled:cursor-not-allowed disabled:opacity-50 app-no-drag",
+  toolbar: "inline-flex min-h-[34px] cursor-pointer items-center rounded-md border-none bg-transparent px-2 py-1 text-[15px] hover:bg-selection app-no-drag",
+  icon: "inline-flex size-[30px] shrink-0 cursor-pointer items-center justify-center rounded-md border-none bg-transparent text-muted hover:bg-selection hover:text-text app-no-drag",
+  iconDanger: "inline-flex size-[30px] shrink-0 cursor-pointer items-center justify-center rounded-md border-none bg-transparent text-muted hover:bg-danger/15 hover:text-danger app-no-drag"
 };
-function Button({ variant = "primary", className, type = "button", ...props }) {
+function Button({ variant = "primary", className, type = "button", innerRef, ...props }) {
   const classes = className ? `${VARIANT_CLASSES[variant]} ${className}` : VARIANT_CLASSES[variant];
-  return jsx("button", { type, className: classes, ...props });
+  return jsx("button", { ref: innerRef, type, className: classes, ...props });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/components/FieldError/index.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.15_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_ba082a637edc564667da1417d93e49c1/node_modules/@harborclient/sdk/dist/components/FieldError/index.js
 function spacingClasses(spacing) {
   switch (spacing) {
     case "section":
@@ -58,7 +75,7 @@ function spacingClasses(spacing) {
       return "mt-1";
   }
 }
-function FieldError({ children, id, spacing = "field", roleAlert = false, className }) {
+function FieldError({ children, id, spacing = "field", roleAlert = true, className }) {
   if (children == null || children === "")
     return null;
   const base = `${spacingClasses(spacing)} text-[14px] text-danger`;
@@ -66,14 +83,14 @@ function FieldError({ children, id, spacing = "field", roleAlert = false, classN
   return jsx("p", { id, className: classes, role: roleAlert ? "alert" : void 0, children });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/components/AsyncListState/index.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.15_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_ba082a637edc564667da1417d93e49c1/node_modules/@harborclient/sdk/dist/components/AsyncListState/index.js
 function LoadingMessage({ children = "Loading\u2026", className }) {
   const base = "text-[14px] text-muted";
   const classes = className ? `${base} ${className}` : base;
   return jsx("p", { role: "status", className: classes, children });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/runtime/react.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.15_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_ba082a637edc564667da1417d93e49c1/node_modules/@harborclient/sdk/dist/runtime/react.js
 function hook(name) {
   const react = requireHostReact();
   const fn = react[name];
@@ -100,8 +117,11 @@ function cloneElement(element, props, ...children) {
 function isValidElement(element) {
   return hook("isValidElement")(element);
 }
+function useId() {
+  return hook("useId")();
+}
 
-// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/components/forms/classes.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.15_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_ba082a637edc564667da1417d93e49c1/node_modules/@harborclient/sdk/dist/components/forms/classes.js
 var field = "rounded-md border border-separator bg-field px-2 py-1 text-[15px] text-text app-no-drag";
 var surfaceField = "w-full rounded-md border border-separator bg-field px-3 py-2 text-[14px] text-text";
 var VARIANT_CLASSES2 = {
@@ -119,13 +139,75 @@ function mergeFieldClasses(variant, className) {
   return void 0;
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/components/forms/Input.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.15_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_ba082a637edc564667da1417d93e49c1/node_modules/@harborclient/sdk/dist/components/forms/Input.js
 function Input({ ref, variant = "control", type, className, ...props }) {
   const resolvedVariant = type === "checkbox" || type === "radio" ? "plain" : variant;
   return jsx("input", { ref, type, className: mergeFieldClasses(resolvedVariant, className), ...props });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/components/FormGroup/index.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.15_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_ba082a637edc564667da1417d93e49c1/node_modules/@harborclient/sdk/dist/components/enhanceControl.js
+var REACT_FRAGMENT_TYPE = Symbol.for("react.fragment");
+var FORM_CONTROL_TAGS = /* @__PURE__ */ new Set(["button", "input", "select", "textarea"]);
+function getSingleChild(node) {
+  if (node == null || typeof node === "boolean")
+    return void 0;
+  if (Array.isArray(node)) {
+    const filtered = node.filter((n) => n != null && n !== false);
+    return filtered.length === 1 ? filtered[0] : void 0;
+  }
+  return node;
+}
+function applyAriaProps(child, options) {
+  const { describedBy, invalid, id } = options;
+  const props = {};
+  if (id && child.props.id == null) {
+    props.id = id;
+  }
+  if (describedBy) {
+    const existing = typeof child.props["aria-describedby"] === "string" ? child.props["aria-describedby"] : void 0;
+    props["aria-describedby"] = existing ? `${existing} ${describedBy}` : describedBy;
+  }
+  if (invalid) {
+    props["aria-invalid"] = true;
+  }
+  if (Object.keys(props).length === 0)
+    return child;
+  return cloneElement(child, props);
+}
+function enhanceControl(child, options) {
+  const { describedBy, invalid, id } = options;
+  if (!describedBy && !invalid && !id)
+    return child;
+  const single = getSingleChild(child);
+  if (single !== void 0 && single !== child) {
+    return enhanceControl(single, options);
+  }
+  if (!isValidElement(child))
+    return child;
+  if (child.type === REACT_FRAGMENT_TYPE) {
+    const inner = getSingleChild(child.props.children);
+    if (inner && isValidElement(inner)) {
+      return cloneElement(child, {}, enhanceControl(inner, options));
+    }
+    return child;
+  }
+  if (typeof child.type === "string") {
+    if (FORM_CONTROL_TAGS.has(child.type)) {
+      return applyAriaProps(child, options);
+    }
+    const inner = getSingleChild(child.props.children);
+    if (inner && isValidElement(inner)) {
+      const enhanced = enhanceControl(inner, options);
+      if (enhanced !== inner) {
+        return cloneElement(child, {}, enhanced);
+      }
+    }
+    return child;
+  }
+  return applyAriaProps(child, options);
+}
+
+// node_modules/.pnpm/@harborclient+sdk@0.6.15_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_ba082a637edc564667da1417d93e49c1/node_modules/@harborclient/sdk/dist/components/FormGroup/index.js
 function labelClasses(tone, srOnly, inline) {
   const base = "text-[14px]";
   const visibility = srOnly ? "sr-only" : "";
@@ -136,18 +218,9 @@ function labelClasses(tone, srOnly, inline) {
   const color = tone === "muted" ? "text-muted" : "font-medium text-text";
   return `${base} ${color} ${visibility}`.trim();
 }
-function enhanceControl(child, describedBy) {
-  if (!describedBy || !isValidElement(child)) {
-    return child;
-  }
-  const existingDescribedBy = typeof child.props["aria-describedby"] === "string" ? child.props["aria-describedby"] : void 0;
-  const mergedDescribedBy = existingDescribedBy ? `${existingDescribedBy} ${describedBy}` : describedBy;
-  return cloneElement(child, {
-    "aria-invalid": true,
-    "aria-describedby": mergedDescribedBy
-  });
-}
-function FormGroup({ label, children, htmlFor, description, error, errorId, layout = "stacked", labelTone = "default", srOnly = false, className, labelClassName }) {
+function FormGroup({ label, children, htmlFor, description, error, errorId, descriptionId, layout = "stacked", labelTone = "default", srOnly = false, className, labelClassName }) {
+  const generatedId = useId();
+  const controlId = htmlFor ?? generatedId;
   const extra = className ?? "";
   if (layout === "associated") {
     const associatedClasses = labelClassName ?? "text-[14px] text-text";
@@ -156,34 +229,45 @@ function FormGroup({ label, children, htmlFor, description, error, errorId, layo
   if (layout === "checkboxAdjacent") {
     const wrapperClasses2 = extra ? `flex items-start gap-2 ${extra}` : "flex items-start gap-2";
     const adjacentLabelClasses = labelClassName ?? "min-w-0 flex-1 text-[14px] text-text";
-    return jsxs("div", { className: wrapperClasses2, children: [children, jsx("label", { htmlFor, className: adjacentLabelClasses, children: label })] });
+    const linkedChildren = enhanceControl(children, { id: controlId });
+    return jsxs("div", { className: wrapperClasses2, children: [linkedChildren, jsx("label", { htmlFor: controlId, className: adjacentLabelClasses, children: label })] });
   }
   if (layout === "radio") {
     const wrapperClasses2 = extra ? `inline-flex cursor-pointer items-center gap-1.5 text-[14px] text-text app-no-drag ${extra}` : "inline-flex cursor-pointer items-center gap-1.5 text-[14px] text-text app-no-drag";
-    return jsxs("label", { htmlFor, className: wrapperClasses2, children: [children, label] });
+    const linkedChildren = enhanceControl(children, { id: controlId });
+    return jsxs("label", { htmlFor: controlId, className: wrapperClasses2, children: [linkedChildren, label] });
   }
   if (layout === "checkbox") {
     const wrapperClasses2 = extra ? `flex items-center gap-2 ${extra}` : "flex items-center gap-2";
-    return jsxs("label", { htmlFor, className: wrapperClasses2, children: [children, jsx("span", { className: labelClasses(labelTone, srOnly, false), children: label })] });
+    const linkedChildren = enhanceControl(children, { id: controlId });
+    return jsxs("label", { htmlFor: controlId, className: wrapperClasses2, children: [linkedChildren, jsx("span", { className: labelClasses(labelTone, srOnly, false), children: label })] });
   }
   if (layout === "inline") {
     const wrapperClasses2 = extra ? `flex min-w-0 flex-1 items-center gap-2 ${extra}` : "flex min-w-0 flex-1 items-center gap-2";
-    return jsxs("label", { htmlFor, className: wrapperClasses2, children: [jsx("span", { className: labelClasses(labelTone, srOnly, true), children: label }), children] });
+    const linkedChildren = enhanceControl(children, { id: controlId });
+    return jsxs("label", { htmlFor: controlId, className: wrapperClasses2, children: [jsx("span", { className: labelClasses(labelTone, srOnly, true), children: label }), linkedChildren] });
   }
+  const resolvedDescriptionId = description != null && description !== "" ? descriptionId ?? (htmlFor ? `${htmlFor}-description` : void 0) : void 0;
   const resolvedErrorId = error != null && error !== "" ? errorId ?? (htmlFor ? `${htmlFor}-error` : void 0) : void 0;
-  const control = enhanceControl(children, resolvedErrorId);
+  const describedByIds = [resolvedDescriptionId, resolvedErrorId].filter((id) => id != null);
+  const describedBy = describedByIds.length > 0 ? describedByIds.join(" ") : void 0;
+  const control = enhanceControl(children, {
+    describedBy,
+    invalid: resolvedErrorId != null,
+    id: htmlFor
+  });
   const wrapperClasses = extra ? `flex flex-col gap-1 ${extra}` : "flex flex-col gap-1";
-  return jsxs("div", { className: wrapperClasses, children: [jsxs("label", { htmlFor, className: "flex flex-col gap-1", children: [jsx("span", { className: labelClasses(labelTone, srOnly, false), children: label }), control, description != null && description !== "" ? jsx("p", { className: "m-0 text-[14px] text-muted", children: description }) : null] }), resolvedErrorId ? jsx(FieldError, { id: resolvedErrorId, spacing: "field", children: error }) : null] });
+  return jsxs("div", { className: wrapperClasses, children: [jsxs("label", { htmlFor, className: "flex flex-col gap-1", children: [jsx("span", { className: labelClasses(labelTone, srOnly, false), children: label }), control, resolvedDescriptionId ? jsx("p", { id: resolvedDescriptionId, className: "m-0 text-[14px] text-muted", children: description }) : null] }), resolvedErrorId ? jsx(FieldError, { id: resolvedErrorId, spacing: "field", children: error }) : null] });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/components/StatusMessage/index.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.15_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_ba082a637edc564667da1417d93e49c1/node_modules/@harborclient/sdk/dist/components/StatusMessage/index.js
 function StatusMessage({ children, live = true, id, className }) {
   const base = "text-[14px] text-muted";
   const classes = className ? `${base} ${className}` : base;
   return jsx("p", { id, className: classes, role: live ? "status" : void 0, "aria-live": live ? "polite" : void 0, children });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/ui/tokens.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.15_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_ba082a637edc564667da1417d93e49c1/node_modules/@harborclient/sdk/dist/ui/tokens.js
 var METHOD_CLASSES = {
   get: "text-method-get",
   post: "text-method-post",
