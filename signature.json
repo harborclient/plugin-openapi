@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "pluginId": "com.harborclient.plugins.openapi",
-  "pluginVersion": "1.0.5",
+  "pluginVersion": "1.0.6",
   "algorithm": "Ed25519",
   "files": [
     {
       "path": ".eslintcache",
-      "sha256": "44b986ee137259ea55e2f769301e602554833272386859effc794244964d4257"
+      "sha256": "3f94661d4dc5e1e5aac936fcf2f084c4039ea091c5057489748cd5c8a91099ef"
     },
     {
       "path": ".gitignore",
@@ -22,23 +22,23 @@
     },
     {
       "path": "dist/renderer.js",
-      "sha256": "e5b419fc9146a364c8083c258cf6b743b3470e1b31d082604e9711f8e30fa664"
+      "sha256": "db5706f54ef62eeadb965378ff38f9f59504eb02fedf5d42ed6cc1ceaf3d4ad9"
     },
     {
       "path": "eslint.config.mjs",
-      "sha256": "9b3e9cb152d0f4e901c42dec8ae980024f6d0425f2c71933ba5f8ad3839fd43b"
+      "sha256": "d74a66f91fd2bcd4d548f8fbff511fb47e4db06620ac137b29a8867e377c259d"
     },
     {
       "path": "manifest.json",
-      "sha256": "d6c62a92d185975e3910159b2915255843ccbd0f53d67d1e68b17a40ac5c8738"
+      "sha256": "674b3c3fed4cc78b23de6fcb977fdbdc29f6a0a717cf3b46808acf62791a5091"
     },
     {
       "path": "package.json",
-      "sha256": "2b8f4fbbc56142f4252debf62ce8c277cc30cc0d49110752b1c9dd9c8febda30"
+      "sha256": "d3eb46f3444fce16775352dfce601c6846416e0bf86e288371f3105fc9574a6b"
     },
     {
       "path": "pnpm-lock.yaml",
-      "sha256": "789bb10c281dfe860994f506f993a939a874d2cef69af98e0eb829a8fc4750ad"
+      "sha256": "8c8fbb40fdbeb4615f965a2af31f29b0f24896e71ba6b6eb652a05b52355a85d"
     },
     {
       "path": "README.md",
@@ -50,7 +50,7 @@
     },
     {
       "path": "scripts/build.mjs",
-      "sha256": "100cfa74988d39d6a86e8f057d11ffab6195027886254295dd366af8d31772a9"
+      "sha256": "b6184b7583f318543f8f3e6c3c3bf2eda7557d59a6e7ee89b4509d2b5d839434"
     },
     {
       "path": "scripts/plugin-sign.ts",
@@ -86,8 +86,8 @@
     },
     {
       "path": "tsconfig.json",
-      "sha256": "dced0ea880bec6222ac9856d3d2ce11b91fd874298f3129c8b5944606dc73668"
+      "sha256": "663c22f2cb634722bc1c1191c4808b53c89d930979d4936cb6d0a539f4476ac9"
     }
   ],
-  "signature": "xImZYj5DaQTDgx9zyxAUXptmo/4KTdCrIe5qov6U0tii1X8gU+73PG+43HrCFS6R7VyPbAJEU4y0uXpkqRHoDA=="
+  "signature": "E+hJnEuilx6Zyiie16UgnFpihTfIkhAGbvbxdLI1lH8horM40tSdfFeUUp3qLnAsEWapcBmTOamSn/8QX8TFDQ=="
 }
