@@ -1,588 +1,299 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <style>
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
 
-      html,
-      body {
-        width: 1280px;
-        height: 720px;
-        min-height: 720px;
-        max-height: 720px;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        font-family:
-          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        background-color: #0c1220;
-        background-image:
-          radial-gradient(ellipse 70% 60% at 88% 10%, rgba(56, 189, 248, 0.2) 0%, transparent 55%),
-          radial-gradient(ellipse 60% 50% at 8% 85%, rgba(251, 146, 60, 0.16) 0%, transparent 50%),
-          radial-gradient(ellipse 40% 30% at 50% 50%, rgba(73, 204, 144, 0.06) 0%, transparent 60%),
-          linear-gradient(160deg, #0c1220 0%, #111827 45%, #0a0f1a 100%);
-        background-repeat: no-repeat;
-        background-size: 1280px 720px;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-      .canvas {
-        position: fixed;
-        inset: 0;
-        width: 1280px;
-        height: 720px;
-        background: transparent;
-      }
+    html,
+    body {
+      width: 1280px;
+      height: 720px;
+      min-height: 720px;
+      max-height: 720px;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family:
+        -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: #030910;
+      background-image:
+        radial-gradient(ellipse 48% 58% at 78% 23%, rgba(45, 212, 191, 0.22), transparent 66%),
+        radial-gradient(ellipse 46% 54% at 20% 72%, rgba(34, 211, 238, 0.18), transparent 62%),
+        radial-gradient(circle at 50% 55%, rgba(20, 184, 166, 0.12), transparent 42%),
+        linear-gradient(145deg, #02070d 0%, #07111a 42%, #030910 100%);
+      background-repeat: no-repeat;
+      background-size: 1280px 720px;
+    }
 
-      .grid {
-        position: absolute;
-        inset: 0;
-        background-image:
-          linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-        background-size: 32px 32px;
-        pointer-events: none;
-      }
+    .canvas {
+      position: fixed;
+      inset: 0;
+      width: 1280px;
+      height: 720px;
+      background: transparent;
+    }
 
-      .header {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 2;
-        padding: 32px 48px 20px;
-      }
+    .canvas::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(rgba(255, 255, 255, 0.028) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: radial-gradient(ellipse at center, black 0%, transparent 72%);
+      opacity: 0.38;
+    }
 
-      .mockup-area {
-        position: absolute;
-        top: 172px;
-        left: 0;
-        width: 1280px;
-        height: 548px;
-      }
+    .canvas::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 50% 45%, transparent 0%, transparent 46%, rgba(0, 0, 0, 0.58) 100%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.38));
+    }
 
-      .badge-row {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 14px;
-      }
+    .hero {
+      position: absolute;
+      z-index: 2;
+      top: 122px;
+      left: 92px;
+    }
 
-      .plugin-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        padding: 5px 12px;
-        border-radius: 999px;
-        background: rgba(56, 189, 248, 0.12);
-        border: 1px solid rgba(56, 189, 248, 0.35);
-        color: #7dd3fc;
-        font-size: 11px;
-        font-weight: 600;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-      }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+      color: #99f6e4;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
 
-      .plugin-badge .dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background: #38bdf8;
-        box-shadow: 0 0 8px #38bdf8;
-      }
+    .eyebrow::before {
+      content: '';
+      width: 11px;
+      height: 11px;
+      border-radius: 999px;
+      background: #2dd4bf;
+      box-shadow:
+        0 0 18px rgba(45, 212, 191, 0.9),
+        0 0 44px rgba(45, 212, 191, 0.45);
+    }
 
-      .pill {
-        padding: 4px 10px;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        color: #94a3b8;
-        font-size: 11px;
-        font-weight: 500;
-      }
+    .plugin-name {
+      position: relative;
+      color: #f8ffff;
+      font-size: 146px;
+      font-weight: 800;
+      line-height: 0.92;
+      letter-spacing: -0.08em;
+      text-shadow:
+        0 0 18px rgba(153, 246, 228, 0.34),
+        0 0 82px rgba(45, 212, 191, 0.28),
+        0 34px 80px rgba(0, 0, 0, 0.5);
+    }
 
-      h1 {
-        font-size: 38px;
-        font-weight: 700;
-        line-height: 1.1;
-        color: #f8fafc;
-        letter-spacing: -0.02em;
-      }
+    .plugin-name::after {
+      content: 'OpenAPI\A Import';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      color: transparent;
+      white-space: pre;
+      -webkit-text-stroke: 2px rgba(45, 212, 191, 0.22);
+      filter: blur(10px);
+      transform: translate(12px, 16px);
+    }
 
-      h1 span {
-        background: linear-gradient(90deg, #38bdf8, #49cc90, #fb923c);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-      }
+    .plugin-name span {
+      display: block;
+      white-space: nowrap;
+    }
 
-      .subtitle {
-        margin-top: 10px;
-        font-size: 16px;
-        color: #64748b;
-        line-height: 1.45;
-        max-width: 640px;
-      }
+    .tagline {
+      margin-top: 40px;
+      color: rgba(226, 255, 251, 0.76);
+      font-size: 33px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
 
-      .mockup-glow {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 4px;
-        bottom: 0;
-        border-radius: 16px 16px 0 0;
-        background: linear-gradient(
-          135deg,
-          rgba(56, 189, 248, 0.2),
-          rgba(73, 204, 144, 0.12),
-          rgba(251, 146, 60, 0.1)
-        );
-        filter: blur(24px);
-        opacity: 0.85;
-      }
+    .tile {
+      position: absolute;
+      z-index: 1;
+      right: 132px;
+      top: 164px;
+      width: 244px;
+      height: 244px;
+      border-radius: 58px;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.01)),
+        linear-gradient(145deg, rgba(20, 184, 166, 0.28), rgba(8, 13, 22, 0.72));
+      border: 1px solid rgba(153, 246, 228, 0.22);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+        0 30px 90px rgba(0, 0, 0, 0.48),
+        0 0 90px rgba(45, 212, 191, 0.28);
+    }
 
-      .mockup {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 1280px;
-        height: 548px;
-        border-radius: 12px 12px 0 0;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-bottom: none;
-        background: #1a1f2e;
-        box-shadow:
-          0 -8px 32px rgba(0, 0, 0, 0.35),
-          0 0 0 1px rgba(255, 255, 255, 0.04) inset;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-      }
+    .tile::before {
+      content: 'API';
+      position: absolute;
+      top: 56px;
+      left: 0;
+      right: 0;
+      color: #eafffb;
+      font-size: 66px;
+      font-weight: 800;
+      letter-spacing: -0.08em;
+      text-align: center;
+      text-shadow: 0 0 32px rgba(94, 234, 212, 0.42);
+    }
 
-      .mockup-toolbar {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 10px 16px;
-        background: #141824;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-        flex-shrink: 0;
-      }
+    .tile::after {
+      content: '';
+      position: absolute;
+      left: 52px;
+      right: 50px;
+      bottom: 62px;
+      height: 68px;
+      background:
+        radial-gradient(circle at 10px 9px, #5eead4 0 7px, transparent 8px),
+        radial-gradient(circle at 10px 34px, rgba(94, 234, 212, 0.78) 0 7px, transparent 8px),
+        radial-gradient(circle at 10px 59px, rgba(94, 234, 212, 0.52) 0 7px, transparent 8px),
+        linear-gradient(90deg, rgba(94, 234, 212, 0.9) 28px, rgba(94, 234, 212, 0.18) 28px 100%),
+        linear-gradient(90deg, rgba(94, 234, 212, 0.62) 28px, rgba(94, 234, 212, 0.12) 28px 100%),
+        linear-gradient(90deg, rgba(94, 234, 212, 0.42) 28px, rgba(94, 234, 212, 0.1) 28px 100%);
+      background-size:
+        100% 18px,
+        100% 18px,
+        100% 18px,
+        100% 8px,
+        100% 8px,
+        100% 8px;
+      background-position:
+        0 0,
+        0 25px,
+        0 50px,
+        0 5px,
+        0 30px,
+        0 55px;
+      background-repeat: no-repeat;
+      filter: drop-shadow(0 0 24px rgba(45, 212, 191, 0.42));
+    }
 
-      .traffic {
-        width: 11px;
-        height: 11px;
-        border-radius: 50%;
-      }
+    .import-arrow {
+      position: absolute;
+      z-index: 2;
+      right: 224px;
+      top: 340px;
+      width: 74px;
+      height: 4px;
+      border-radius: 999px;
+      background: #5eead4;
+      box-shadow: 0 0 22px rgba(45, 212, 191, 0.52);
+    }
 
-      .traffic.r {
-        background: #ff5f57;
-      }
+    .import-arrow::after {
+      content: '';
+      position: absolute;
+      right: -2px;
+      top: -8px;
+      width: 18px;
+      height: 18px;
+      border-top: 4px solid #5eead4;
+      border-right: 4px solid #5eead4;
+      transform: rotate(45deg);
+    }
 
-      .traffic.y {
-        background: #febc2e;
-      }
+    .beam {
+      position: absolute;
+      z-index: 1;
+      right: 362px;
+      top: 324px;
+      width: 172px;
+      height: 3px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, transparent, rgba(94, 234, 212, 0.9), transparent);
+      box-shadow: 0 0 24px rgba(45, 212, 191, 0.55);
+      transform: rotate(-18deg);
+    }
 
-      .traffic.g {
-        background: #28c840;
-      }
+    .orb {
+      position: absolute;
+      border-radius: 999px;
+      background: #67e8f9;
+      box-shadow:
+        0 0 16px rgba(103, 232, 249, 0.78),
+        0 0 44px rgba(20, 184, 166, 0.34);
+    }
 
-      .toolbar-title {
-        margin-left: 10px;
-        font-size: 12px;
-        color: #64748b;
-        font-weight: 500;
-      }
+    .orb.one {
+      top: 116px;
+      left: 875px;
+      width: 8px;
+      height: 8px;
+    }
 
-      .panel-header {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 16px;
-        padding: 14px 20px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-        background: #161b28;
-        flex-shrink: 0;
-      }
+    .orb.two {
+      top: 504px;
+      left: 1038px;
+      width: 11px;
+      height: 11px;
+      opacity: 0.82;
+    }
 
-      .panel-header h2 {
-        font-size: 15px;
-        font-weight: 600;
-        color: #e2e8f0;
-        margin-bottom: 4px;
-      }
+    .orb.three {
+      top: 578px;
+      left: 262px;
+      width: 7px;
+      height: 7px;
+      opacity: 0.7;
+    }
 
-      .panel-header p {
-        font-size: 12px;
-        color: #64748b;
-        max-width: 480px;
-        line-height: 1.4;
-      }
+    .corner-glow {
+      position: absolute;
+      z-index: 1;
+      right: -120px;
+      bottom: -180px;
+      width: 520px;
+      height: 520px;
+      border-radius: 999px;
+      background: rgba(20, 184, 166, 0.18);
+      filter: blur(68px);
+    }
+  </style>
+</head>
 
-      .choose-btn {
-        padding: 8px 14px;
-        border-radius: 7px;
-        background: rgba(255, 255, 255, 0.06);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: #e2e8f0;
-        font-size: 12px;
-        font-weight: 500;
-        white-space: nowrap;
-        flex-shrink: 0;
-      }
+<body>
+  <div class="canvas">
+    <div class="corner-glow"></div>
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+    <div class="orb three"></div>
+    <div class="beam"></div>
+    <div class="tile"></div>
+    <div class="import-arrow"></div>
 
-      .panel-body {
-        flex: 1;
-        min-height: 0;
-        padding: 16px 20px 18px;
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-        overflow: hidden;
-      }
-
-      .field-label {
-        font-size: 12px;
-        font-weight: 600;
-        color: #e2e8f0;
-        margin-bottom: 6px;
-      }
-
-      .field-input {
-        padding: 10px 12px;
-        border-radius: 7px;
-        background: #0f131c;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        font-size: 13px;
-        color: #cbd5e1;
-      }
-
-      .meta-lines {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        font-size: 11px;
-        color: #64748b;
-      }
-
-      .meta-lines code {
-        font-family: ui-monospace, monospace;
-        color: #94a3b8;
-      }
-
-      .action-bar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        flex-shrink: 0;
-      }
-
-      .selection-count {
-        font-size: 12px;
-        color: #cbd5e1;
-      }
-
-      .import-btn {
-        padding: 9px 18px;
-        border-radius: 7px;
-        background: linear-gradient(135deg, #0ea5e9, #49cc90);
-        color: white;
-        font-size: 12px;
-        font-weight: 600;
-        box-shadow: 0 4px 14px rgba(14, 165, 233, 0.3);
-        white-space: nowrap;
-      }
-
-      .groups {
-        flex: 1;
-        min-height: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        overflow: hidden;
-      }
-
-      .group {
-        border-radius: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        background: rgba(0, 0, 0, 0.15);
-        overflow: hidden;
-        flex-shrink: 0;
-      }
-
-      .group-header {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 12px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-        background: rgba(255, 255, 255, 0.02);
-      }
-
-      .checkbox {
-        width: 14px;
-        height: 14px;
-        border-radius: 3px;
-        background: #38bdf8;
-        border: 1px solid #38bdf8;
-        position: relative;
-        flex-shrink: 0;
-      }
-
-      .checkbox::after {
-        content: '✓';
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 10px;
-        color: white;
-        font-weight: 700;
-      }
-
-      .group-title {
-        font-size: 12px;
-        font-weight: 600;
-        color: #e2e8f0;
-      }
-
-      .group-count {
-        font-size: 11px;
-        color: #64748b;
-      }
-
-      .op-row {
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
-        padding: 8px 12px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-      }
-
-      .op-row:last-child {
-        border-bottom: none;
-      }
-
-      .op-content {
-        flex: 1;
-        min-width: 0;
-      }
-
-      .op-name {
-        font-size: 12px;
-        font-weight: 500;
-        color: #e2e8f0;
-        margin-bottom: 3px;
-      }
-
-      .op-url {
-        font-size: 11px;
-        font-family: ui-monospace, monospace;
-        color: #94a3b8;
-      }
-
-      .method {
-        font-weight: 700;
-        font-family: ui-monospace, monospace;
-      }
-
-      .method.get {
-        color: #34d399;
-      }
-
-      .method.post {
-        color: #38bdf8;
-      }
-
-      .toast {
-        position: absolute;
-        top: 36px;
-        right: 56px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 14px;
-        border-radius: 9px;
-        background: rgba(15, 23, 42, 0.95);
-        border: 1px solid rgba(73, 204, 144, 0.4);
-        box-shadow:
-          0 8px 24px rgba(0, 0, 0, 0.45),
-          0 0 20px rgba(73, 204, 144, 0.12);
-        z-index: 4;
-      }
-
-      .toast-icon {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background: rgba(73, 204, 144, 0.2);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #49cc90;
-        font-size: 11px;
-        font-weight: 700;
-      }
-
-      .toast-text {
-        font-size: 12px;
-        color: #e2e8f0;
-        font-weight: 500;
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="canvas">
-      <div class="grid"></div>
-
-      <div class="header">
-        <div class="badge-row">
-          <div class="plugin-badge"><span class="dot"></span> HarborClient Plugin</div>
-          <span class="pill">Local parsing</span>
-          <span class="pill">Tag grouping</span>
-          <span class="pill">Preview first</span>
-        </div>
-        <h1><span>OpenAPI</span> spec → collection, instantly</h1>
-        <p class="subtitle">
-          Parse OpenAPI 3.x locally, preview operations grouped by tags, and bulk-create a
-          HarborClient collection — nothing leaves your machine.
-        </p>
-      </div>
-
-      <div class="mockup-area">
-        <div class="mockup-glow"></div>
-        <div class="mockup">
-          <div class="mockup-toolbar">
-            <span class="traffic r"></span>
-            <span class="traffic y"></span>
-            <span class="traffic g"></span>
-            <span class="toolbar-title">HarborClient — Import OpenAPI</span>
-          </div>
-          <div class="panel-header">
-            <div>
-              <h2>Import OpenAPI</h2>
-              <p>
-                Parse an OpenAPI 3.x spec locally and create a HarborClient collection grouped by
-                tags.
-              </p>
-            </div>
-            <div class="choose-btn">Choose file…</div>
-          </div>
-          <div class="panel-body">
-            <div>
-              <div class="field-label">Collection name</div>
-              <div class="field-input">E-commerce API</div>
-              <div class="meta-lines" style="margin-top: 8px">
-                <div>Source: <code>/project/spec.yaml</code></div>
-                <div>Base URL: <code>https://api.example.com/v1</code></div>
-              </div>
-            </div>
-            <div class="action-bar">
-              <span class="selection-count">11 of 11 operations selected</span>
-              <div class="import-btn">Import collection</div>
-            </div>
-            <div class="groups">
-              <div class="group">
-                <div class="group-header">
-                  <span class="checkbox"></span>
-                  <span class="group-title">Auth</span>
-                  <span class="group-count">(2)</span>
-                </div>
-                <div class="op-row">
-                  <span class="checkbox"></span>
-                  <div class="op-content">
-                    <div class="op-name">Login and get access token</div>
-                    <div class="op-url">
-                      <span class="method post">POST</span> https://api.example.com/v1/auth/login
-                    </div>
-                  </div>
-                </div>
-                <div class="op-row">
-                  <span class="checkbox"></span>
-                  <div class="op-content">
-                    <div class="op-name">Create a new user account</div>
-                    <div class="op-url">
-                      <span class="method post">POST</span> https://api.example.com/v1/auth/register
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="group">
-                <div class="group-header">
-                  <span class="checkbox"></span>
-                  <span class="group-title">Products</span>
-                  <span class="group-count">(3)</span>
-                </div>
-                <div class="op-row">
-                  <span class="checkbox"></span>
-                  <div class="op-content">
-                    <div class="op-name">List all products with filters</div>
-                    <div class="op-url">
-                      <span class="method get">GET</span> https://api.example.com/v1/products
-                    </div>
-                  </div>
-                </div>
-                <div class="op-row">
-                  <span class="checkbox"></span>
-                  <div class="op-content">
-                    <div class="op-name">Get product details by ID</div>
-                    <div class="op-url">
-                      <span class="method get">GET</span> https://api.example.com/v1/products/{id}
-                    </div>
-                  </div>
-                </div>
-                <div class="op-row">
-                  <span class="checkbox"></span>
-                  <div class="op-content">
-                    <div class="op-name">Get current user's cart</div>
-                    <div class="op-url">
-                      <span class="method get">GET</span> https://api.example.com/v1/cart
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="group">
-                <div class="group-header">
-                  <span class="checkbox"></span>
-                  <span class="group-title">Orders</span>
-                  <span class="group-count">(2)</span>
-                </div>
-                <div class="op-row">
-                  <span class="checkbox"></span>
-                  <div class="op-content">
-                    <div class="op-name">List your past orders</div>
-                    <div class="op-url">
-                      <span class="method get">GET</span> https://api.example.com/v1/orders
-                    </div>
-                  </div>
-                </div>
-                <div class="op-row">
-                  <span class="checkbox"></span>
-                  <div class="op-content">
-                    <div class="op-name">Checkout and place order</div>
-                    <div class="op-url">
-                      <span class="method post">POST</span> https://api.example.com/v1/checkout
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="toast">
-        <div class="toast-icon">✓</div>
-        <span class="toast-text">Collection imported</span>
-      </div>
+    <div class="hero">
+      <div class="eyebrow">HarborClient Plugin</div>
+      <h1 class="plugin-name">
+        <span>OpenAPI</span>
+        <span>Import</span>
+      </h1>
+      <p class="tagline">Turn specs into collections locally.</p>
     </div>
-  </body>
+  </div>
+</body>
+
 </html>

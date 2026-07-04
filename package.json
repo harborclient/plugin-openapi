@@ -2,6 +2,7 @@
   "name": "@harborclient/plugin-openapi",
   "type": "module",
   "scripts": {
+    "release": "bash scripts/publish.sh",
     "build": "node scripts/build.mjs",
     "dev": "node scripts/build.mjs --watch",
     "typecheck": "tsc --noEmit",
@@ -14,7 +15,7 @@
     "plugin:verify": "node --experimental-strip-types scripts/plugin-verify.ts"
   },
   "dependencies": {
-    "@harborclient/sdk": "^1.0.0",
+    "@harborclient/sdk": "^1.0.33",
     "yaml": "^2.8.0"
   },
   "devDependencies": {
