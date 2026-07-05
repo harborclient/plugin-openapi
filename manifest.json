@@ -1,7 +1,7 @@
 {
   "id": "com.harborclient.plugins.openapi",
   "name": "OpenAPI Import",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "author": "HarborClient",
   "description": "README.md",
   "summary": "HarborClient plugin that imports an OpenAPI 3.x specification and creates a collection with requests grouped by the first tag on each operation.",
