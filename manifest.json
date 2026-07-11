@@ -1,11 +1,14 @@
 {
   "id": "com.harborclient.plugins.openapi",
   "name": "OpenAPI Import",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "author": "HarborClient",
   "description": "README.md",
   "summary": "HarborClient plugin that imports an OpenAPI 3.x specifications.",
-  "categories": ["requests", "import"],
+  "categories": [
+    "requests",
+    "import"
+  ],
   "screenshots": [
     "https://raw.githubusercontent.com/harborclient/plugin-openapi/main/screenshot.png"
   ],
@@ -13,7 +16,10 @@
     "harborclient": ">=2.0.0"
   },
   "renderer": "dist/renderer.js",
-  "permissions": ["ui", "storage"],
+  "permissions": [
+    "ui",
+    "storage"
+  ],
   "contributes": {
     "mainViews": [
       {
