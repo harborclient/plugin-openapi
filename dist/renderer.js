@@ -1,4 +1,4 @@
-// node_modules/.pnpm/@harborclient+sdk@1.0.33_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_f39ff3884637cfd15f954ae52c8cfc3e/node_modules/@harborclient/sdk/dist/runtime/reactHost.js
+// node_modules/.pnpm/@harborclient+sdk@1.0.65_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_ac6b33e2e88f71fc25c858f86cd5d1c6/node_modules/@harborclient/sdk/dist/runtime/reactHost.js
 var HOST_REACT_GLOBAL_KEY = "__HARBORCLIENT_HOST_REACT__";
 var hostReact = null;
 function readGlobalHostReact() {
@@ -7,12 +7,6 @@ function readGlobalHostReact() {
   }
   const candidate = globalThis[HOST_REACT_GLOBAL_KEY];
   return candidate ?? null;
-}
-function setHostReact(react) {
-  hostReact = react;
-  if (typeof globalThis !== "undefined") {
-    globalThis[HOST_REACT_GLOBAL_KEY] = react;
-  }
 }
 function requireHostReact() {
   if (hostReact == null) {
@@ -29,12 +23,7 @@ function requireHostReact() {
   return hostReact;
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.0.33_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_f39ff3884637cfd15f954ae52c8cfc3e/node_modules/@harborclient/sdk/dist/runtime/index.js
-function installReact(react) {
-  setHostReact(react);
-}
-
-// node_modules/.pnpm/@harborclient+sdk@1.0.33_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_f39ff3884637cfd15f954ae52c8cfc3e/node_modules/@harborclient/sdk/dist/runtime/jsx-runtime.js
+// node_modules/.pnpm/@harborclient+sdk@1.0.65_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_ac6b33e2e88f71fc25c858f86cd5d1c6/node_modules/@harborclient/sdk/dist/runtime/jsx-runtime.js
 var Fragment = Symbol.for("@harborclient/sdk.Fragment");
 function build(type, props, key) {
   const react = requireHostReact();
@@ -3317,12 +3306,12 @@ var getDefaultConfig = () => {
 };
 var twMerge = /* @__PURE__ */ createTailwindMerge(getDefaultConfig);
 
-// node_modules/.pnpm/@harborclient+sdk@1.0.33_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_f39ff3884637cfd15f954ae52c8cfc3e/node_modules/@harborclient/sdk/dist/components/utils.js
+// node_modules/.pnpm/@harborclient+sdk@1.0.65_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_ac6b33e2e88f71fc25c858f86cd5d1c6/node_modules/@harborclient/sdk/dist/components/utils.js
 function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.0.33_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_f39ff3884637cfd15f954ae52c8cfc3e/node_modules/@harborclient/sdk/dist/components/FieldError/index.js
+// node_modules/.pnpm/@harborclient+sdk@1.0.65_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_ac6b33e2e88f71fc25c858f86cd5d1c6/node_modules/@harborclient/sdk/dist/components/FieldError/index.js
 function spacingClasses(spacing) {
   switch (spacing) {
     case "section":
@@ -3340,7 +3329,7 @@ function FieldError({ children, spacing = "field", roleAlert = true, className, 
   return jsx("p", { ...props, className: cn("hc-field-error text-[14px] text-danger", spacingClasses(spacing), className), role: roleAlert ? "alert" : void 0, children });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.0.33_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_f39ff3884637cfd15f954ae52c8cfc3e/node_modules/@harborclient/sdk/dist/components/Button/index.js
+// node_modules/.pnpm/@harborclient+sdk@1.0.65_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_ac6b33e2e88f71fc25c858f86cd5d1c6/node_modules/@harborclient/sdk/dist/components/Button/index.js
 var BUTTON_BASE = "inline-flex cursor-pointer items-center rounded-full app-no-drag";
 var VARIANT_CLASSES = {
   primary: cn(BUTTON_BASE, "min-h-[32px] justify-center border border-transparent bg-accent px-3 py-1 text-[15px] font-medium text-white shadow-sm hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"),
@@ -3355,12 +3344,12 @@ function Button({ variant = "primary", className, type = "button", innerRef, ...
   return jsx("button", { ref: innerRef, type, className: cn("hc-button", VARIANT_CLASSES[variant], className), ...props });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.0.33_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_f39ff3884637cfd15f954ae52c8cfc3e/node_modules/@harborclient/sdk/dist/components/AsyncListState/LoadingMessage.js
+// node_modules/.pnpm/@harborclient+sdk@1.0.65_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_ac6b33e2e88f71fc25c858f86cd5d1c6/node_modules/@harborclient/sdk/dist/components/AsyncListState/LoadingMessage.js
 function LoadingMessage({ children = "Loading\u2026", className, ...props }) {
   return jsx("p", { ...props, role: "status", className: cn("hc-loading-message text-[14px] text-muted", className), children });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.0.33_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_f39ff3884637cfd15f954ae52c8cfc3e/node_modules/@harborclient/sdk/dist/components/forms/classes.js
+// node_modules/.pnpm/@harborclient+sdk@1.0.65_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_ac6b33e2e88f71fc25c858f86cd5d1c6/node_modules/@harborclient/sdk/dist/components/forms/classes.js
 var field = "rounded-lg border border-separator bg-field px-2.5 py-1.5 text-[16px] text-text app-no-drag";
 var surfaceField = "w-full rounded-lg border border-separator bg-field px-3 py-2.5 text-[15px] text-text";
 function mergeFieldClasses(variant, className, rootClass) {
@@ -3368,13 +3357,13 @@ function mergeFieldClasses(variant, className, rootClass) {
   return result === "" ? void 0 : result;
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.0.33_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_f39ff3884637cfd15f954ae52c8cfc3e/node_modules/@harborclient/sdk/dist/components/forms/Input.js
+// node_modules/.pnpm/@harborclient+sdk@1.0.65_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_ac6b33e2e88f71fc25c858f86cd5d1c6/node_modules/@harborclient/sdk/dist/components/forms/Input.js
 function Input({ ref, variant = "control", type, className, ...props }) {
   const resolvedVariant = type === "checkbox" || type === "radio" ? "plain" : variant;
   return jsx("input", { ref, type, className: mergeFieldClasses(resolvedVariant, className, "hc-input"), ...props });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.0.33_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_f39ff3884637cfd15f954ae52c8cfc3e/node_modules/@harborclient/sdk/dist/runtime/react.js
+// node_modules/.pnpm/@harborclient+sdk@1.0.65_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_ac6b33e2e88f71fc25c858f86cd5d1c6/node_modules/@harborclient/sdk/dist/runtime/react.js
 function hook(name) {
   const react = requireHostReact();
   const fn = react[name];
@@ -3464,7 +3453,92 @@ var defaultExport = new Proxy(reactNamespace, {
   }
 });
 
-// node_modules/.pnpm/@harborclient+sdk@1.0.33_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_f39ff3884637cfd15f954ae52c8cfc3e/node_modules/@harborclient/sdk/dist/components/enhanceControl.js
+// node_modules/.pnpm/@harborclient+sdk@1.0.65_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_ac6b33e2e88f71fc25c858f86cd5d1c6/node_modules/@harborclient/sdk/dist/runtime/store.js
+function createExternalStore(initial) {
+  let state = initial;
+  const listeners = /* @__PURE__ */ new Set();
+  return {
+    subscribe: (listener) => {
+      listeners.add(listener);
+      return () => {
+        listeners.delete(listener);
+      };
+    },
+    getSnapshot: () => state,
+    setState: (next) => {
+      state = next;
+      for (const listener of listeners) {
+        listener();
+      }
+    }
+  };
+}
+function defaultEquals(a, b) {
+  return JSON.stringify(a) === JSON.stringify(b);
+}
+function createStorageStore(options) {
+  const { storage, key, parse: parse2, equals = defaultEquals, keepCurrentWhenMissing = false } = options;
+  const external = createExternalStore(parse2(void 0));
+  async function reloadFromStorage() {
+    const raw = await storage.get(key);
+    if (raw === void 0 && keepCurrentWhenMissing) {
+      return;
+    }
+    const next = parse2(raw);
+    const current = external.getSnapshot();
+    if (!equals(current, next)) {
+      external.setState(next);
+    }
+  }
+  async function set2(next) {
+    const current = external.getSnapshot();
+    if (equals(current, next)) {
+      return;
+    }
+    await storage.set(key, next);
+    external.setState(next);
+  }
+  function useValue() {
+    return useSyncExternalStore(external.subscribe, external.getSnapshot, external.getSnapshot);
+  }
+  void reloadFromStorage();
+  return {
+    subscribe: external.subscribe,
+    getSnapshot: external.getSnapshot,
+    useValue,
+    reloadFromStorage,
+    set: set2
+  };
+}
+function setIntervalDisposable(callback, intervalMs) {
+  const timer = setInterval(callback, intervalMs);
+  return {
+    dispose: () => {
+      clearInterval(timer);
+    }
+  };
+}
+function syncOnWindowFocus(stores2, options) {
+  const list = Array.isArray(stores2) ? stores2 : [stores2];
+  const reload = () => {
+    for (const store of list) {
+      void store.reloadFromStorage();
+    }
+  };
+  window.addEventListener("focus", reload);
+  document.addEventListener("visibilitychange", reload);
+  reload();
+  const intervalDisposable = options?.intervalMs !== void 0 ? setIntervalDisposable(reload, options.intervalMs) : null;
+  return {
+    dispose: () => {
+      window.removeEventListener("focus", reload);
+      document.removeEventListener("visibilitychange", reload);
+      intervalDisposable?.dispose();
+    }
+  };
+}
+
+// node_modules/.pnpm/@harborclient+sdk@1.0.65_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_ac6b33e2e88f71fc25c858f86cd5d1c6/node_modules/@harborclient/sdk/dist/components/enhanceControl.js
 var REACT_FRAGMENT_TYPE = Symbol.for("react.fragment");
 var FORM_CONTROL_TAGS = /* @__PURE__ */ new Set(["button", "input", "select", "textarea"]);
 function getSingleChild(node) {
@@ -3526,7 +3600,7 @@ function enhanceControl(child, options) {
   return applyAriaProps(child, options);
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.0.33_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_f39ff3884637cfd15f954ae52c8cfc3e/node_modules/@harborclient/sdk/dist/components/FormGroup/index.js
+// node_modules/.pnpm/@harborclient+sdk@1.0.65_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_ac6b33e2e88f71fc25c858f86cd5d1c6/node_modules/@harborclient/sdk/dist/components/FormGroup/index.js
 function labelClasses(tone, srOnly, inline) {
   const base = "hc-form-group-label text-[18px]";
   const visibility = srOnly ? "sr-only" : "";
@@ -3587,7 +3661,7 @@ function FormGroup({ label, children, htmlFor, description, error, errorId, desc
   return jsxs("div", { ...props, className: wrapperClasses, children: [jsxs("label", { htmlFor, className: "hc-form-group-label flex flex-col gap-1", children: [jsx("span", { className: labelClasses(labelTone, srOnly, false), children: label }), resolvedDescriptionId ? jsx("p", { id: resolvedDescriptionId, className: "hc-form-group-description m-0 text-[14px] text-muted", children: description }) : null, control] }), resolvedErrorId ? jsx(FieldError, { id: resolvedErrorId, spacing: "field", children: error }) : null] });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.0.33_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_f39ff3884637cfd15f954ae52c8cfc3e/node_modules/@harborclient/sdk/dist/ui/tokens.js
+// node_modules/.pnpm/@harborclient+sdk@1.0.65_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_ac6b33e2e88f71fc25c858f86cd5d1c6/node_modules/@harborclient/sdk/dist/ui/tokens.js
 var METHOD_CLASSES = {
   get: "text-method-get",
   post: "text-method-post",
@@ -3601,9 +3675,45 @@ function methodColorClass(method) {
   return METHOD_CLASSES[method.toLowerCase()] ?? "text-text";
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.0.33_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_f39ff3884637cfd15f954ae52c8cfc3e/node_modules/@harborclient/sdk/dist/components/StatusMessage/index.js
+// node_modules/.pnpm/@harborclient+sdk@1.0.65_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_ac6b33e2e88f71fc25c858f86cd5d1c6/node_modules/@harborclient/sdk/dist/components/StatusMessage/index.js
 function StatusMessage({ children, live = true, className, ...props }) {
   return jsx("p", { ...props, className: cn("hc-status-message text-[14px] text-muted", className), role: live ? "status" : void 0, "aria-live": live ? "polite" : void 0, children });
+}
+
+// src/importSession.ts
+var STORAGE_KEY = "pendingOpenApiImport";
+function parseSession(raw) {
+  if (!raw || typeof raw !== "object") {
+    return null;
+  }
+  const session = raw;
+  if (typeof session.contents !== "string" || typeof session.path !== "string" || typeof session.name !== "string") {
+    return null;
+  }
+  return {
+    contents: session.contents,
+    path: session.path,
+    name: session.name
+  };
+}
+var stores = /* @__PURE__ */ new WeakMap();
+function getOpenApiImportSessionStore(storage) {
+  let store = stores.get(storage);
+  if (!store) {
+    store = createStorageStore({
+      storage,
+      key: STORAGE_KEY,
+      parse: parseSession
+    });
+    stores.set(storage, store);
+  }
+  return store;
+}
+async function setOpenApiImportSession(storage, session) {
+  await getOpenApiImportSessionStore(storage).set(session);
+}
+async function clearOpenApiImportSession(storage) {
+  await getOpenApiImportSessionStore(storage).set(null);
 }
 
 // node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/nodes/identity.js
@@ -9876,15 +9986,24 @@ function parse(src, reviver, options) {
 // src/openapi/parse.ts
 var HTTP_METHODS = ["get", "post", "put", "patch", "delete", "head", "options"];
 function parseOpenApiSpec(text) {
-  const document = parseDocument2(text);
-  assertOpenApiVersion(document);
-  const title = readInfoTitle(document);
-  const baseUrl = readBaseUrl(document);
-  const operations = flattenOperations(document, baseUrl);
+  const document2 = parseDocument2(text);
+  assertOpenApiVersion(document2);
+  const title = readInfoTitle(document2);
+  const baseUrl = readBaseUrl(document2);
+  const operations = flattenOperations(document2, baseUrl);
   if (operations.length === 0) {
     throw new Error("No HTTP operations were found in the OpenAPI document.");
   }
   return { title, baseUrl, operations };
+}
+function canImportOpenApiSpec(text) {
+  try {
+    const document2 = parseDocument2(text);
+    const version = typeof document2.openapi === "string" ? document2.openapi.trim() : "";
+    return version.startsWith("3.");
+  } catch {
+    return false;
+  }
 }
 function parseDocument2(text) {
   const trimmed = text.trim();
@@ -9909,14 +10028,14 @@ function parseDocument2(text) {
     throw new Error(`Failed to parse OpenAPI document: ${message}`, { cause: error });
   }
 }
-function assertOpenApiVersion(document) {
-  const version = typeof document.openapi === "string" ? document.openapi.trim() : "";
+function assertOpenApiVersion(document2) {
+  const version = typeof document2.openapi === "string" ? document2.openapi.trim() : "";
   if (!version.startsWith("3.")) {
     throw new Error("Only OpenAPI 3.x documents are supported.");
   }
 }
-function readInfoTitle(document) {
-  const info = document.info;
+function readInfoTitle(document2) {
+  const info = document2.info;
   if (info && typeof info === "object") {
     const title = info.title;
     if (typeof title === "string" && title.trim()) {
@@ -9925,8 +10044,8 @@ function readInfoTitle(document) {
   }
   return "Imported API";
 }
-function readBaseUrl(document) {
-  const servers = document.servers;
+function readBaseUrl(document2) {
+  const servers = document2.servers;
   if (!Array.isArray(servers) || servers.length === 0) {
     return "";
   }
@@ -9940,8 +10059,8 @@ function readBaseUrl(document) {
   }
   return url.trim().replace(/\/+$/, "");
 }
-function flattenOperations(document, baseUrl) {
-  const paths = document.paths;
+function flattenOperations(document2, baseUrl) {
+  const paths = document2.paths;
   if (!paths || typeof paths !== "object") {
     return [];
   }
@@ -10189,7 +10308,6 @@ function operationsToCreateRequests(operations) {
 }
 
 // src/components/ImportView.tsx
-var STORAGE_KEY_LAST_PATH = "lastSpecPath";
 function groupOperationsByFolder(operations) {
   const groups = /* @__PURE__ */ new Map();
   for (const operation of operations) {
@@ -10201,6 +10319,8 @@ function groupOperationsByFolder(operations) {
   return new Map([...groups.entries()].sort(([left], [right]) => left.localeCompare(right)));
 }
 function ImportView({ hc }) {
+  const sessionStore = useMemo(() => getOpenApiImportSessionStore(hc.storage), [hc.storage]);
+  const pendingSession = sessionStore.useValue();
   const [busy, setBusy] = useState(false);
   const [importing, setImporting] = useState(false);
   const [error, setError] = useState(null);
@@ -10208,20 +10328,9 @@ function ImportView({ hc }) {
   const [parsedSpec, setParsedSpec] = useState(null);
   const [collectionName, setCollectionName] = useState("");
   const [selectedIds, setSelectedIds] = useState(/* @__PURE__ */ new Set());
+  const consumeGenerationRef = useRef(0);
   const collectionNameError = error === "Collection name is required." ? error : void 0;
   const globalError = error != null && error !== "Collection name is required." ? error : null;
-  useEffect(() => {
-    let active = true;
-    void hc.storage.get(STORAGE_KEY_LAST_PATH).then((value) => {
-      if (active && typeof value === "string" && value.trim()) {
-        setSpecPath(value);
-      }
-    }).catch(() => {
-    });
-    return () => {
-      active = false;
-    };
-  }, [hc.storage]);
   useEffect(() => {
     if (parsedSpec && !collectionName.trim()) {
       setCollectionName(parsedSpec.title);
@@ -10239,45 +10348,46 @@ function ImportView({ hc }) {
     }
     return groupOperationsByFolder(parsedSpec.operations);
   }, [parsedSpec]);
-  const loadSpecFromPath = useCallback(
-    async (path) => {
-      setBusy(true);
-      setError(null);
-      try {
-        const text = await hc.fs.readFile(path);
-        const parsed = parseOpenApiSpec(text);
-        setSpecPath(path);
-        setParsedSpec(parsed);
-        setCollectionName(parsed.title);
-        setSelectedIds(new Set(parsed.operations.map((operation) => operation.id)));
-        await hc.storage.set(STORAGE_KEY_LAST_PATH, path);
-      } catch (loadError) {
-        setParsedSpec(null);
-        setSelectedIds(/* @__PURE__ */ new Set());
-        setError(
-          loadError instanceof Error ? loadError.message : "Failed to read the OpenAPI file."
-        );
-      } finally {
-        setBusy(false);
-      }
-    },
-    [hc.fs, hc.storage]
-  );
-  const handlePickFile = useCallback(async () => {
+  const loadSpecFromContents = useCallback(async (path, contents) => {
+    setBusy(true);
     setError(null);
-    const paths = await hc.fs.pickFile({
-      title: "Choose an OpenAPI spec",
-      filters: [
-        { name: "OpenAPI", extensions: ["json", "yaml", "yml"] },
-        { name: "JSON", extensions: ["json"] },
-        { name: "YAML", extensions: ["yaml", "yml"] }
-      ]
-    });
-    if (paths.length === 0) {
+    try {
+      const parsed = parseOpenApiSpec(contents);
+      setSpecPath(path);
+      setParsedSpec(parsed);
+      setCollectionName(parsed.title);
+      setSelectedIds(new Set(parsed.operations.map((operation) => operation.id)));
+    } catch (loadError) {
+      setParsedSpec(null);
+      setSelectedIds(/* @__PURE__ */ new Set());
+      setError(
+        loadError instanceof Error ? loadError.message : "Failed to read the OpenAPI file."
+      );
+    } finally {
+      setBusy(false);
+    }
+  }, []);
+  useEffect(() => {
+    void sessionStore.reloadFromStorage();
+    const sync = syncOnWindowFocus(sessionStore, { intervalMs: 250 });
+    return () => {
+      sync.dispose();
+    };
+  }, [sessionStore]);
+  useEffect(() => {
+    if (!pendingSession) {
       return;
     }
-    await loadSpecFromPath(paths[0]);
-  }, [hc.fs, loadSpecFromPath]);
+    const session = pendingSession;
+    const generation = ++consumeGenerationRef.current;
+    void (async () => {
+      await loadSpecFromContents(session.path, session.contents);
+      if (generation !== consumeGenerationRef.current) {
+        return;
+      }
+      await clearOpenApiImportSession(hc.storage);
+    })();
+  }, [pendingSession, hc.storage, loadSpecFromContents]);
   const handleToggleOperation = useCallback((operationId) => {
     setSelectedIds((current) => {
       const next = new Set(current);
@@ -10338,33 +10448,17 @@ function ImportView({ hc }) {
     }
   }, [collectionName, hc.host, hc.ui, selectedOperations]);
   return /* @__PURE__ */ jsxs("div", { className: "flex h-full min-h-0 flex-col bg-surface", children: [
-    /* @__PURE__ */ jsxs("div", { className: "flex shrink-0 items-center justify-between border-b border-separator px-4 py-3", children: [
-      /* @__PURE__ */ jsxs("div", { children: [
-        /* @__PURE__ */ jsx("h1", { className: "text-[16px] font-medium text-text", children: "Import OpenAPI" }),
-        /* @__PURE__ */ jsx("p", { className: "text-[14px] text-muted", children: "Parse an OpenAPI 3.x spec locally and create a HarborClient collection grouped by tags." })
-      ] }),
-      /* @__PURE__ */ jsx(
-        Button,
-        {
-          variant: "secondary",
-          disabled: busy || importing,
-          onClick: () => {
-            void handlePickFile();
-          },
-          children: "Choose file\u2026"
-        }
-      )
-    ] }),
+    /* @__PURE__ */ jsx("div", { className: "flex shrink-0 items-center border-b border-separator px-4 py-3", children: /* @__PURE__ */ jsxs("div", { children: [
+      /* @__PURE__ */ jsx("h1", { className: "text-[16px] font-medium text-text", children: "Import OpenAPI" }),
+      /* @__PURE__ */ jsx("p", { className: "text-[14px] text-muted", children: "Parse an OpenAPI 3.x spec locally and create a HarborClient collection grouped by tags." })
+    ] }) }),
     /* @__PURE__ */ jsxs("div", { className: "min-h-0 flex-1 overflow-auto p-4", children: [
       busy ? /* @__PURE__ */ jsx(LoadingMessage, { children: "Loading OpenAPI spec\u2026" }) : null,
       globalError != null ? /* @__PURE__ */ jsx(StatusMessage, { id: "openapi-import-error", className: "mb-4 text-danger", live: true, children: globalError }) : null,
       !parsedSpec && !busy ? /* @__PURE__ */ jsxs(StatusMessage, { live: false, children: [
-        "Choose an OpenAPI JSON or YAML file to preview its operations before importing.",
-        specPath != null ? /* @__PURE__ */ jsxs(Fragment, { children: [
-          " ",
-          "Last file: ",
-          /* @__PURE__ */ jsx("span", { className: "font-mono text-text", children: specPath })
-        ] }) : null
+        "Use ",
+        /* @__PURE__ */ jsx("strong", { children: "File \u2192 Import" }),
+        " to select an OpenAPI JSON or YAML file and preview its operations before importing."
       ] }) : null,
       parsedSpec != null ? /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-4", children: [
         /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-2", children: [
@@ -10505,19 +10599,24 @@ function ImportView({ hc }) {
   ] });
 }
 
+// src/pluginImports.ts
+function registerImportHandler(hc, extensions, handler) {
+  const context = hc;
+  const disposable = context.imports.registerHandler(extensions, handler);
+  hc.subscriptions.push(disposable);
+  return disposable;
+}
+
 // src/renderer.tsx
 var MAIN_VIEW_ID = "openapi.import";
-var COMMAND_ID = "openapi.import";
+function isAgentWebview() {
+  const role = new URL(globalThis.location.href).searchParams.get("role");
+  return role == null || role === "agent";
+}
 function activate(hc) {
-  installReact(hc.react);
   function ImportViewHost() {
     return /* @__PURE__ */ jsx(ImportView, { hc });
   }
-  hc.subscriptions.push(
-    hc.commands.register(COMMAND_ID, () => {
-      void hc.commands.execute("harborclient:openMainView", hc.pluginId, MAIN_VIEW_ID);
-    })
-  );
   hc.subscriptions.push(
     hc.ui.registerMainView({
       id: MAIN_VIEW_ID,
@@ -10525,12 +10624,20 @@ function activate(hc) {
       Component: ImportViewHost
     })
   );
+  if (!isAgentWebview()) {
+    return;
+  }
   hc.subscriptions.push(
-    hc.ui.registerMenuItem({
-      menu: "file",
-      command: COMMAND_ID,
-      label: "Import OpenAPI",
-      group: "import"
+    registerImportHandler(hc, [".json", ".yaml", ".yml"], {
+      canImport: (file) => canImportOpenApiSpec(file.contents),
+      import: async (file) => {
+        await setOpenApiImportSession(hc.storage, {
+          contents: file.contents,
+          path: file.path,
+          name: file.name
+        });
+        await hc.commands.execute("harborclient:openMainView", hc.pluginId, MAIN_VIEW_ID);
+      }
     })
   );
 }

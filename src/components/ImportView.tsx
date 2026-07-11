@@ -6,16 +6,19 @@ import {
   StatusMessage
 } from '@harborclient/sdk/components';
 import type { PluginContext } from '@harborclient/sdk';
-import { useCallback, useEffect, useMemo, useState } from '@harborclient/sdk/react';
+import { useCallback, useEffect, useMemo, useRef, useState } from '@harborclient/sdk/react';
+import { syncOnWindowFocus } from '@harborclient/sdk/store';
 import { methodColorClass } from '@harborclient/sdk/ui';
+import {
+  clearOpenApiImportSession,
+  getOpenApiImportSessionStore
+} from '../importSession';
 import {
   operationsToCreateRequests,
   parseOpenApiSpec,
   type ParsedOpenApiOperation,
   type ParsedOpenApiSpec
 } from '../openapi/parse';
-
-const STORAGE_KEY_LAST_PATH = 'lastSpecPath';
 
 interface Props {
   /**
@@ -46,9 +49,11 @@ function groupOperationsByFolder(
 }
 
 /**
- * Full main-area workflow for picking, previewing, and importing an OpenAPI spec.
+ * Full main-area workflow for previewing and importing an OpenAPI spec from File -> Import.
  */
 export function ImportView({ hc }: Props) {
+  const sessionStore = useMemo(() => getOpenApiImportSessionStore(hc.storage), [hc.storage]);
+  const pendingSession = sessionStore.useValue();
   const [busy, setBusy] = useState(false);
   const [importing, setImporting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -56,29 +61,10 @@ export function ImportView({ hc }: Props) {
   const [parsedSpec, setParsedSpec] = useState<ParsedOpenApiSpec | null>(null);
   const [collectionName, setCollectionName] = useState('');
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const consumeGenerationRef = useRef(0);
 
   const collectionNameError = error === 'Collection name is required.' ? error : undefined;
   const globalError = error != null && error !== 'Collection name is required.' ? error : null;
-
-  /**
-   * Loads the last picked spec path from plugin storage on mount.
-   */
-  useEffect(() => {
-    let active = true;
-    void hc.storage
-      .get<string>(STORAGE_KEY_LAST_PATH)
-      .then((value) => {
-        if (active && typeof value === 'string' && value.trim()) {
-          setSpecPath(value);
-        }
-      })
-      .catch(() => {
-        /* ignore missing storage */
-      });
-    return () => {
-      active = false;
-    };
-  }, [hc.storage]);
 
   /**
    * Keeps the collection name aligned with the parsed API title.
@@ -110,55 +96,61 @@ export function ImportView({ hc }: Props) {
   }, [parsedSpec]);
 
   /**
-   * Reads and parses an OpenAPI file from an absolute path on the allowlist.
+   * Parses OpenAPI contents and updates the preview state.
    *
-   * @param path - User-selected spec file path.
+   * @param path - Source file path shown in the preview UI.
+   * @param contents - Raw OpenAPI file contents.
    */
-  const loadSpecFromPath = useCallback(
-    async (path: string): Promise<void> => {
-      setBusy(true);
-      setError(null);
-      try {
-        const text = await hc.fs.readFile(path);
-        const parsed = parseOpenApiSpec(text);
-        setSpecPath(path);
-        setParsedSpec(parsed);
-        setCollectionName(parsed.title);
-        setSelectedIds(new Set(parsed.operations.map((operation) => operation.id)));
-        await hc.storage.set(STORAGE_KEY_LAST_PATH, path);
-      } catch (loadError) {
-        setParsedSpec(null);
-        setSelectedIds(new Set());
-        setError(
-          loadError instanceof Error ? loadError.message : 'Failed to read the OpenAPI file.'
-        );
-      } finally {
-        setBusy(false);
-      }
-    },
-    [hc.fs, hc.storage]
-  );
+  const loadSpecFromContents = useCallback(async (path: string, contents: string): Promise<void> => {
+    setBusy(true);
+    setError(null);
+    try {
+      const parsed = parseOpenApiSpec(contents);
+      setSpecPath(path);
+      setParsedSpec(parsed);
+      setCollectionName(parsed.title);
+      setSelectedIds(new Set(parsed.operations.map((operation) => operation.id)));
+    } catch (loadError) {
+      setParsedSpec(null);
+      setSelectedIds(new Set());
+      setError(
+        loadError instanceof Error ? loadError.message : 'Failed to read the OpenAPI file.'
+      );
+    } finally {
+      setBusy(false);
+    }
+  }, []);
 
   /**
-   * Opens the native file picker and loads the chosen OpenAPI document.
+   * Reloads pending import sessions written by the agent webview.
    */
-  const handlePickFile = useCallback(async (): Promise<void> => {
-    setError(null);
-    const paths = await hc.fs.pickFile({
-      title: 'Choose an OpenAPI spec',
-      filters: [
-        { name: 'OpenAPI', extensions: ['json', 'yaml', 'yml'] },
-        { name: 'JSON', extensions: ['json'] },
-        { name: 'YAML', extensions: ['yaml', 'yml'] }
-      ]
-    });
+  useEffect(() => {
+    void sessionStore.reloadFromStorage();
+    const sync = syncOnWindowFocus(sessionStore, { intervalMs: 250 });
+    return () => {
+      sync.dispose();
+    };
+  }, [sessionStore]);
 
-    if (paths.length === 0) {
+  /**
+   * Consumes a pending File -> Import session from plugin storage.
+   */
+  useEffect(() => {
+    if (!pendingSession) {
       return;
     }
 
-    await loadSpecFromPath(paths[0]);
-  }, [hc.fs, loadSpecFromPath]);
+    const session = pendingSession;
+    const generation = ++consumeGenerationRef.current;
+
+    void (async () => {
+      await loadSpecFromContents(session.path, session.contents);
+      if (generation !== consumeGenerationRef.current) {
+        return;
+      }
+      await clearOpenApiImportSession(hc.storage);
+    })();
+  }, [pendingSession, hc.storage, loadSpecFromContents]);
 
   /**
    * Toggles one operation in the import selection set.
@@ -240,22 +232,13 @@ export function ImportView({ hc }: Props) {
 
   return (
     <div className="flex h-full min-h-0 flex-col bg-surface">
-      <div className="flex shrink-0 items-center justify-between border-b border-separator px-4 py-3">
+      <div className="flex shrink-0 items-center border-b border-separator px-4 py-3">
         <div>
           <h1 className="text-[16px] font-medium text-text">Import OpenAPI</h1>
           <p className="text-[14px] text-muted">
             Parse an OpenAPI 3.x spec locally and create a HarborClient collection grouped by tags.
           </p>
         </div>
-        <Button
-          variant="secondary"
-          disabled={busy || importing}
-          onClick={() => {
-            void handlePickFile();
-          }}
-        >
-          Choose file…
-        </Button>
       </div>
 
       <div className="min-h-0 flex-1 overflow-auto p-4">
@@ -269,13 +252,8 @@ export function ImportView({ hc }: Props) {
 
         {!parsedSpec && !busy ? (
           <StatusMessage live={false}>
-            Choose an OpenAPI JSON or YAML file to preview its operations before importing.
-            {specPath != null ? (
-              <>
-                {' '}
-                Last file: <span className="font-mono text-text">{specPath}</span>
-              </>
-            ) : null}
+            Use <strong>File → Import</strong> to select an OpenAPI JSON or YAML file and preview
+            its operations before importing.
           </StatusMessage>
         ) : null}
 

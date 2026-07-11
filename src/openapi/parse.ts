@@ -102,6 +102,24 @@ export function parseOpenApiSpec(text: string): ParsedOpenApiSpec {
 }
 
 /**
+ * Returns whether raw file contents look like an OpenAPI 3.x document.
+ *
+ * Used by the File -> Import handler to avoid claiming unrelated JSON or YAML files.
+ *
+ * @param text - Raw file contents from the host import flow.
+ * @returns True when the document declares OpenAPI 3.x.
+ */
+export function canImportOpenApiSpec(text: string): boolean {
+  try {
+    const document = parseDocument(text);
+    const version = typeof document.openapi === 'string' ? document.openapi.trim() : '';
+    return version.startsWith('3.');
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Parses JSON or YAML text into a plain object.
  *
  * @param text - Raw spec file contents.

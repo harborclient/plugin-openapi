@@ -15,7 +15,7 @@
     "plugin:verify": "node --experimental-strip-types scripts/plugin-verify.ts"
   },
   "dependencies": {
-    "@harborclient/sdk": "^1.0.33",
+    "@harborclient/sdk": "^1.0.65",
     "yaml": "^2.8.0"
   },
   "devDependencies": {

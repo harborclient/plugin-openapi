@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseOpenApiSpec } from './parse';
+import { canImportOpenApiSpec, parseOpenApiSpec } from './parse';
 
 const PETSTORE_SPEC = `
 openapi: 3.0.3
@@ -67,5 +67,24 @@ describe('parseOpenApiSpec', () => {
 
   it('rejects unsupported OpenAPI versions', () => {
     expect(() => parseOpenApiSpec('{"openapi":"2.0","paths":{}}')).toThrow(/OpenAPI 3.x/);
+  });
+});
+
+describe('canImportOpenApiSpec', () => {
+  it('returns true for OpenAPI 3 YAML specs', () => {
+    expect(canImportOpenApiSpec(PETSTORE_SPEC)).toBe(true);
+  });
+
+  it('returns true for OpenAPI 3 JSON specs', () => {
+    expect(canImportOpenApiSpec('{"openapi":"3.1.0","paths":{}}')).toBe(true);
+  });
+
+  it('returns false for OpenAPI 2.0, HarborClient exports, Postman collections, and empty files', () => {
+    expect(canImportOpenApiSpec('{"openapi":"2.0","paths":{}}')).toBe(false);
+    expect(
+      canImportOpenApiSpec('{"harborclientExport":"collection","harborclientVersion":1}')
+    ).toBe(false);
+    expect(canImportOpenApiSpec('{"info":{"name":"Demo"},"item":[]}')).toBe(false);
+    expect(canImportOpenApiSpec('')).toBe(false);
   });
 });

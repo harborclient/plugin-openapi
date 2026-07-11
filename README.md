@@ -4,19 +4,17 @@ HarborClient plugin that imports an OpenAPI 3.x specification and creates a coll
 
 ![Screenshot](screenshot.png)
 
-
 ## Features
 
-- **File → Import OpenAPI** menu action
-- Local JSON/YAML parsing after `fs.pickFile` — nothing is uploaded
+- **File → Import** integration for OpenAPI JSON/YAML specs
+- Local JSON/YAML parsing — nothing is uploaded
 - Preview operations grouped by tag before import
 - Bulk collection creation via `hc.host.createCollection`
 
 ## Permissions
 
-- `ui` — main view, File menu item, and host collection command
-- `filesystem:pick` / `filesystem:read` — choose and read the spec file locally
-- `storage` — remember the last picked spec path
+- `ui` — main view, File -> Import handler, and host collection command
+- `storage` — hand off the imported spec from the agent webview to the preview webview
 
 ## Setup
 
@@ -46,10 +44,9 @@ Rebuilds `dist/renderer.js` on change. Keep the Import OpenAPI main view open fo
 
 ## Usage
 
-1. Choose **File → Import OpenAPI**.
-2. Pick a `.json`, `.yaml`, or `.yml` OpenAPI 3.x file.
-3. Review the generated operations, adjust the collection name, and deselect any endpoints you do not need.
-4. Click **Import collection**.
+1. Choose **File → Import** and select an OpenAPI `.json`, `.yaml`, or `.yml` file.
+2. Review the generated operations, adjust the collection name, and deselect any endpoints you do not need.
+3. Click **Import collection**.
 
 Requests are grouped into folders using each operation's first OpenAPI tag. Untagged operations are created at the collection root.
 

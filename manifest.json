@@ -1,41 +1,20 @@
 {
   "id": "com.harborclient.plugins.openapi",
   "name": "OpenAPI Import",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "author": "HarborClient",
   "description": "README.md",
-  "summary": "HarborClient plugin that imports an OpenAPI 3.x specification and creates a collection with requests grouped by the first tag on each operation.",
-  "categories": [
-    "requests",
-    "import"
-  ],
+  "summary": "HarborClient plugin that imports an OpenAPI 3.x specifications.",
+  "categories": ["requests", "import"],
   "screenshots": [
     "https://raw.githubusercontent.com/harborclient/plugin-openapi/main/screenshot.png"
   ],
   "engines": {
-    "harborclient": ">=1.9.0"
+    "harborclient": ">=2.0.0"
   },
   "renderer": "dist/renderer.js",
-  "permissions": [
-    "ui",
-    "filesystem:pick",
-    "filesystem:read",
-    "storage"
-  ],
+  "permissions": ["ui", "storage"],
   "contributes": {
-    "commands": [
-      {
-        "id": "openapi.import",
-        "title": "Import OpenAPI"
-      }
-    ],
-    "menus": [
-      {
-        "menu": "file",
-        "command": "openapi.import",
-        "group": "import"
-      }
-    ],
     "mainViews": [
       {
         "id": "openapi.import",
