@@ -11,11 +11,11 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "pack": "pnpm build && zip -r openapi.hcp manifest.json README.md dist",
-    "plugin:sign": "node --experimental-strip-types scripts/plugin-sign.ts",
-    "plugin:verify": "node --experimental-strip-types scripts/plugin-verify.ts"
+    "sign": "node --experimental-strip-types scripts/plugin-sign.ts",
+    "verify": "node --experimental-strip-types scripts/plugin-verify.ts"
   },
   "dependencies": {
-    "@harborclient/sdk": "^1.0.65",
+    "@harborclient/sdk": "^1.0.67",
     "yaml": "^2.8.0"
   },
   "devDependencies": {
