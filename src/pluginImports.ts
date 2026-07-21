@@ -56,7 +56,7 @@ export interface PluginContextWithImports extends PluginContext {
 }
 
 /**
- * Registers an import handler and tracks its disposable on `hc.subscriptions`.
+ * Registers an import handler (auto-tracked by the host on deactivation).
  *
  * @param hc - Renderer plugin context from the HarborClient host.
  * @param extensions - File extensions such as `.json` or `yaml`.
@@ -69,7 +69,5 @@ export function registerImportHandler(
   handler: ImportHandler
 ): Disposable {
   const context = hc as PluginContextWithImports;
-  const disposable = context.imports.registerHandler(extensions, handler);
-  hc.subscriptions.push(disposable);
-  return disposable;
+  return context.imports.registerHandler(extensions, handler);
 }

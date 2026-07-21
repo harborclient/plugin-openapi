@@ -27,29 +27,25 @@ export function activate(hc: PluginContext): void {
     return <ImportView hc={hc} />;
   }
 
-  hc.subscriptions.push(
-    hc.ui.registerMainView({
-      id: MAIN_VIEW_ID,
-      title: 'Import OpenAPI',
-      Component: ImportViewHost
-    })
-  );
+  hc.ui.registerMainView({
+    id: MAIN_VIEW_ID,
+    title: 'Import OpenAPI',
+    Component: ImportViewHost
+  });
 
   if (!isAgentWebview()) {
     return;
   }
 
-  hc.subscriptions.push(
-    registerImportHandler(hc, ['.json', '.yaml', '.yml'], {
-      canImport: (file) => canImportOpenApiSpec(file.contents),
-      import: async (file) => {
-        await setOpenApiImportSession(hc.storage, {
-          contents: file.contents,
-          path: file.path,
-          name: file.name
-        });
-        await hc.commands.execute('harborclient:openMainView', hc.pluginId, MAIN_VIEW_ID);
-      }
-    })
-  );
+  registerImportHandler(hc, ['.json', '.yaml', '.yml'], {
+    canImport: (file) => canImportOpenApiSpec(file.contents),
+    import: async (file) => {
+      await setOpenApiImportSession(hc.storage, {
+        contents: file.contents,
+        path: file.path,
+        name: file.name
+      });
+      await hc.commands.execute('harborclient:openMainView', hc.pluginId, MAIN_VIEW_ID);
+    }
+  });
 }
