@@ -1,7 +1,7 @@
 {
   "id": "com.harborclient.plugins.openapi",
   "name": "OpenAPI Import",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "author": "HarborClient",
   "description": "README.md",
   "summary": "HarborClient plugin that imports an OpenAPI 3.x specifications.",
